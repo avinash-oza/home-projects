@@ -1,0 +1,5 @@
+x:\downloads\documents\visual studio 2010\Projects\DirectoryLister\DirectoryLister\obj\x86\Debug\ResolveAssemblyReference.cache
+x:\downloads\documents\visual studio 2010\Projects\DirectoryLister\DirectoryLister\bin\Debug\DirectoryLister.exe
+x:\downloads\documents\visual studio 2010\Projects\DirectoryLister\DirectoryLister\bin\Debug\DirectoryLister.pdb
+x:\downloads\documents\visual studio 2010\Projects\DirectoryLister\DirectoryLister\obj\x86\Debug\DirectoryLister.exe
+x:\downloads\documents\visual studio 2010\Projects\DirectoryLister\DirectoryLister\obj\x86\Debug\DirectoryLister.pdb
