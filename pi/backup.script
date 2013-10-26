@@ -1,0 +1,3 @@
+#sudo mount -t cifs //172.16.1.10/raid10/ /mnt/win -o user=avi
+tar cvpzf /mnt/win/pi-backup-$(date +%m-%d-%y--%I-%M-%p).tar.gz \
+--exclude=/proc --exclude=/lost+found --exclude=/dev --exclude=/media --exclude=/mnt --exclude=/sys --exclude=/tmp / 
