@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# MAKE SURE THIS IS ADDED TO THE NOPASSWD FIELD IN VISUDO
+
+
+out=$(sudo pwrstat -status | awk "NR==12 || NR==16 || NR==20")
+
+echo $(sudo pwrstat -status | awk " NR==16 || NR==17 || NR==20")
+
+if [[ "$out" == *Utility* ]]
+then
+	exit 0
+else
+	exit 2
+fi

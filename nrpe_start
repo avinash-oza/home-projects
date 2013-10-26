@@ -1,0 +1,1 @@
+/usr/local/nagios/bin/nrpe -d  -c /usr/local/nagios/etc/nrpe.cfg
