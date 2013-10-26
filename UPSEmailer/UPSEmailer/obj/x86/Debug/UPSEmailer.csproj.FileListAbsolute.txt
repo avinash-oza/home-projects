@@ -1,5 +1,0 @@
-x:\downloads\documents\visual studio 2010\Projects\UPSEmailer\UPSEmailer\bin\Debug\UPSEmailer.exe
-x:\downloads\documents\visual studio 2010\Projects\UPSEmailer\UPSEmailer\bin\Debug\UPSEmailer.pdb
-x:\downloads\documents\visual studio 2010\Projects\UPSEmailer\UPSEmailer\obj\x86\Debug\ResolveAssemblyReference.cache
-x:\downloads\documents\visual studio 2010\Projects\UPSEmailer\UPSEmailer\obj\x86\Debug\UPSEmailer.exe
-x:\downloads\documents\visual studio 2010\Projects\UPSEmailer\UPSEmailer\obj\x86\Debug\UPSEmailer.pdb

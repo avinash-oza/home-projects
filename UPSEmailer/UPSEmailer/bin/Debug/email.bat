@@ -1,1 +1,0 @@
-mailsend -to 7328412014@txt.att.net -from lollipop.paintshop@gmail.com -starttle -smtp smtp.gmail.com -port 587 -sub test +cc +bc -v -auth-plain -user lollipop.paintshop -pass tkqkwetdrrxikcsw -sub "POWER OUTAGE" -M "It appears that the power has gone out.If you do not recieve an email within 10 minutes saying the power is back, the system has shutdown." 
