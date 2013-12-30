@@ -1,4 +1,4 @@
-sudo rsync -azP --dry-run --exclude=/USB_OS --exclude /mnt \
+/usr/bin/rsync -azP --delete --dry-run --exclude=/USB_OS --exclude /mnt \
 --exclude /var/log --exclude /sys  --exclude /proc --exclude /tmp \
 --exclude /run/ --exclude /dev \
 / /USB_OS/
