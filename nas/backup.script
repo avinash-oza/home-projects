@@ -1,1 +1,1 @@
-tar cvpzf /mnt/raid1/backups/nas/backup-$(date +%m-%d-%y--%I-%M-%p).tar.gz --exclude=/proc --exclude=/lost+found --exclude=/media --exclude=/mnt --exclude=/sys --exclude=/tmp /
+tar cvpzf /mnt/raid1/backups/nas/backup-$(date +%m-%d-%y--%I-%M-%p).tar.gz --exclude=/proc --exclude=/lost+found --exclude=/media --exclude=/mnt --exclude=/sys --exclude=/tmp --exclude=/USB_OS /
