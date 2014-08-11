@@ -1,1 +1,1 @@
-/usr/bin/rsync -azP --delete /mnt/raid0/Homes/ /mnt/raid1/Homes/
+/usr/bin/rsync -azP --delete --exclude Photos /mnt/raid0/Homes/ /mnt/raid1/Homes/

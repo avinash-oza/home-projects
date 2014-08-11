@@ -1,1 +1,3 @@
 /usr/local/nagios/bin/nrpe -d  -c /usr/local/nagios/etc/nrpe.cfg
+#Not sure why this was added
+#sudo chmod 0777 -Rvf /tmp/
