@@ -1,1 +1,1 @@
-/usr/bin/rsync -azP --delete /mnt/raid0/RecordedTV/Photos/ /mnt/raid1/Homes/Photos
+/usr/bin/rsync -azPi --delete /mnt/raid0/RecordedTV/Photos/ /mnt/raid1/Homes/Photos
