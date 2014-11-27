@@ -1,4 +1,7 @@
-/usr/bin/rsync -azP --delete --exclude=/USB_OS --exclude /mnt \
+#!/bin/sh
+
+/usr/bin/rsync -azPi --delete --exclude=/USB_OS --exclude /mnt \
 --exclude /var/log --exclude /sys  --exclude /proc --exclude /tmp \
 --exclude /run/ --exclude /dev \
-/ /USB_OS/
+/ /USB_OS/ >  /mnt/raid0/logs/ram_backup/$(date +%m-%d-%y--%I-%M-%p)
+

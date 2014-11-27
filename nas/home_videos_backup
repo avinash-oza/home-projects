@@ -1,0 +1,4 @@
+#!/bin/sh
+
+#Backup the converted tapes as well
+/usr/bin/rsync -azPi --delete /mnt/raid0/tape_conversion/ /mnt/raid1/tape_conversion > /mnt/raid0/logs/photos_backup/tape-$(date +%m-%d-%y--%I-%M-%p)
