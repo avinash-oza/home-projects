@@ -1,33 +1,35 @@
-set nocompatible
-set number
-set autoindent
-set expandtab
-set shiftwidth=4
-set softtabstop=4
-set whichwrap+=h,l,<,>,[,]
-syntax enable
-set backspace=indent,eol,start
-set hlsearch
-autocmd InsertEnter * set number
-autocmd InsertEnter * colorscheme molokai
-autocmd InsertEnter * set background=dark
-set timeoutlen=0
-set ruler
-set t_Co=256
-colorscheme molokai
-set background=dark
-"let g:molokai_original=1
+"
+" dotvim : https://github.com/dotphiles/dotvim
+"
+" Setup vim and load required plugins before dotvim
+"
+" Authors:
+"   Ben O'Hara <bohara@gmail.com>
+"
 
-" enable filetype detection
-filetype on
-filetype plugin on
-filetype indent on " file type based indentation
+" Call dotvim
+source ~/.vim/dotvim.vim
 
-" setup makefile
-autocmd Filetype make set noexpandtab shiftwidth=8 softtabstop=0
+if has("user_commands")
+  set nocompatible
+  filetype off
+  set rtp+=~/.vim/bundle/vundle/
+  call vundle#rc()
+  "let g:vundles=['general', 'git', 'hg', 'programming', 'completion', 'ruby', 'python', 'misc']
+  let g:vundles=['general', 'python', 'programming', 'git']
+  "let g:neocomplcache_enable_at_startup = 1
+  " Load 'vundles'
+  source ~/.vim/vundles.vim
+  " Add extra bundles here...
+  " Bundle 'reponame'
+  Bundle 'airblade/vim-gitgutter'
+  Bundle 'spf13/vim-markdown'
+  Bundle 'powerline/powerline'
+  Bundle 'vim-airline/vim-airline-themes'
+endif
 
-" for C-like programming where comments have explicit end
-" characters, if starting a new line in the middle of a comment
-" automatically insert comment leader characters
-autocmd Filetype c,cpp,java set formatoptions+=ro
-autocmd Filetype c, set omnifunc=ccomplete#Complete
+" Override colorscheme from base16
+let g:dotvim_colorscheme = 'base16-default'
+
+" Customize to your needs...
+
