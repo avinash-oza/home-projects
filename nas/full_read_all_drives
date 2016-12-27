@@ -3,11 +3,8 @@
 touch /mnt/raid0/logs/full_read_all_drives/started-$(date +%m-%d-%y--%I-%M-%p)
 
 # /dev/md0
-dd if=/dev/disk/by-uuid/e944a45c-e37f-414a-88e6-d0bed8b3b302 of=/dev/null bs=16M
+dd if=/dev/disk/by-uuid/e944a45c-e37f-414a-88e6-d0bed8b3b302 of=/dev/null bs=64K
 #/dev/md1
-dd if=/dev/disk/by-uuid/3bd53a60-02a5-41a1-a79f-cfc35802860c of=/dev/null bs=16M
-
-#Downstairs mounted hard drive
-dd if=/dev/disk/by-uuid/28a217cc-ff97-482c-bc22-a1eb2005b7b8 of=/dev/null bs=16M
+dd if=/dev/disk/by-uuid/3bd53a60-02a5-41a1-a79f-cfc35802860c of=/dev/null bs=64K
 
 touch /mnt/raid0/logs/full_read_all_drives/ended-$(date +%m-%d-%y--%I-%M-%p)
