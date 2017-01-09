@@ -46,7 +46,7 @@ class TemperatureReciever(object):
         humidity = None
         for tries in xrange(4):
             # Use utility to try and pull temperature and humidity
-            command_to_run="""sudo /usr/local/nagios/libexec/AdafruitDHT 11 18"""
+            command_to_run="""sudo /usr/lib/nagios/plugins/AdafruitDHT 11 18"""
             output = subprocess.check_output([command_to_run], shell=True)
             if 'Temp' in output:
                 c_temperature = self.extract_field_from_reading(output, 'Temp')
