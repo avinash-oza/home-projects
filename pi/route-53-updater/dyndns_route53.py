@@ -19,9 +19,9 @@ from boto.route53.record import ResourceRecordSets
 import logging
 
 logger = logging.getLogger(__name__)
-handler = logging.FileHandler('/home/nagios/dyndns_route53.log')
+#handler = logging.FileHandler('/home/nagios/dyndns_route53.log')
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-handler.setFormatter(formatter)
+#handler.setFormatter(formatter)
 #logger.addHandler(handler) 
 logger.setLevel(logging.DEBUG)
 
