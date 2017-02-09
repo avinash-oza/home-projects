@@ -9,7 +9,7 @@ import mysql.connector
 config = ConfigParser.ConfigParser()
 config.read('bot.config')
 
-CRITICAL_TEMP = 71.0
+CRITICAL_TEMP = 73.0
 
 class TemperatureReciever(object):
     """Retrieves temperatures from the sensors"""
