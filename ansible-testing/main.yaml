@@ -1,4 +1,34 @@
 - hosts: test_servers
   tasks:
     - name: install vim
-      apt: pkg=vim state=installed update_cache=true
+      apt: pkg={{item}}  state=installed update_cache=false
+      with_items:
+        - vim
+        - python3
+        - git
+        - stow
+    - name: Remove cdrom
+      apt_repository:
+        repo: "deb cdrom:[Debian GNU/Linux 8.7.1 _Jessie_ - Official amd64 CD Binary-1 20170116-11:01]/ jessie main"
+        state: absent
+    - name: Remove http mirrors
+      apt_repository:
+        repo: "deb http://ftp.us.debian.org/debian/ jessie main"
+        state: absent
+    - name: Remove http mirrors source
+      apt_repository:
+        repo: "deb-src http://ftp.us.debian.org/debian/ jessie main"
+        state: absent
+    - name: add httpredir mirrors
+      apt_repository:
+        repo: "deb http://httpredir.debian.org/debian/ jessie main"
+        state: present
+    - name: add http mirrors source
+      apt_repository:
+        repo: "deb-src http://httpredir.debian.org/debian/ jessie main"
+        state: present
+        update_cache: yes
+        # only add on the last one
+    - name: Set host name
+      # Need to manually update hosts file here
+      hostname: name=test_machine
