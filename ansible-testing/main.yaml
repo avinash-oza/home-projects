@@ -1,0 +1,4 @@
+- hosts: test_servers
+  tasks:
+    - name: install vim
+      apt: pkg=vim state=installed update_cache=true
