@@ -1,12 +1,6 @@
 - hosts: test_servers
+  user: root
   tasks:
-    - name: install vim
-      apt: pkg={{item}}  state=installed update_cache=false
-      with_items:
-        - vim
-        - python3
-        - git
-        - stow
     - name: Remove cdrom
       apt_repository:
         repo: "deb cdrom:[Debian GNU/Linux 8.7.1 _Jessie_ - Official amd64 CD Binary-1 20170116-11:01]/ jessie main"
@@ -32,3 +26,20 @@
     - name: Set host name
       # Need to manually update hosts file here
       hostname: name=test_machine
+
+    - name: Remove template hostname
+      replace:
+        dest: /etc/hosts
+        regexp: 'debian-mysql-nas'
+        replace: 'test_machine'
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: install packages
+      apt: pkg={{item}}  state=installed update_cache=true
+      with_items:
+        - vim
+        - python3
+        - git
+        - stow
