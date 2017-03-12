@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo 'Called shutdown for win7 and dad-vm'
+sudo virsh shutdown win7
+sudo virsh shutdown dad-vm
+# Wait for 2m
+echo 'Waiting 1.5m for shutdown to finish'
+sleep 1.5m
+echo 'Doing rsync'
+#sudo rsync -aPi /mnt/vm_drive_ssd/vm_drives/ /mnt/vm_drive_raid1/ssd_vm_drives/
+echo 'Starting up vms'
+sudo virsh start win7
+sleep 30s
+sudo virsh start dad-vm

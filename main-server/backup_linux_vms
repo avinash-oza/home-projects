@@ -1,0 +1,9 @@
+# Work in progress
+
+# Make machine names parameters and do one by one
+sudo virsh domblklist dev-machine
+sudo virsh snapshot-create-as --domain dev-machine backup-sate --diskspec vda,file=/mnt/raid0/vm_drives/test_backup_state.qcow2 --quiesce --disk-only --atomic
+sudo virsh domblklist dev-machine
+sudo cp /mnt/raid0/vm_drives/dev-machine.qcow2 /mnt/raid0/vm_drives/dev-machine_backup.qcow2
+sudo virsh blockcommit dev-machine vda --active --verbose --pivot
+

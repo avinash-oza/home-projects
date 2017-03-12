@@ -1,0 +1,2 @@
+tar cvpzf /mnt/raid0/backups/main-server/backup-$(date +%m-%d-%y--%I-%M-%p).tar.gz --exclude=/proc --exclude=/sys --exclude=/run --exclude=/dev \
+--exclude=/lost+found --exclude=/media --exclude=/mnt --exclude=/sys --exclude=/tmp /
