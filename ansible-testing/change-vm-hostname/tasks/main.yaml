@@ -1,13 +1,13 @@
 ---
 - name: Set host name
   # Need to manually update hosts file here
-  hostname: name=test_machine
+  hostname: name= '{{ new_host_name }}'
 
 - name: Remove template hostname
   replace:
     dest: /etc/hosts
-    regexp: 'debian-mysql-nas'
-    replace: 'test_machine'
+    regexp: '{{ original_host_name }}'
+    replace: '{{ new_host_name }}'
     owner: root
     group: root
     mode: 0644
