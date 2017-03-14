@@ -3,6 +3,15 @@
   # Need to manually update hosts file here
   hostname: name= '{{ new_host_name }}'
 
+- name: change hostname file
+  lineinfile:
+    dest: /etc/hostname
+    line: '{{ new_host_name }}'
+    create: true
+    owner: root
+    group: root
+    mode: 0644
+
 - name: Remove template hostname
   replace:
     dest: /etc/hosts

@@ -21,3 +21,24 @@
     state: present
     update_cache: yes
     # only add on the last one
+
+# configure sudo for other operations
+- name: install sudo
+  apt: pkg=sudo  state=installed update_cache=true
+
+- name: Check for wheel group
+  group:
+    name: wheel
+    state: present
+
+- name: Allow wheel group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: add to wheel group
+  user: name=avi groups=wheel append=yes state=present createhome=no
+

@@ -1,0 +1,5 @@
+---
+- hosts: all
+  user: avi
+  roles:
+    - install-and-configure-vim
