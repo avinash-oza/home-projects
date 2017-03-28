@@ -1,6 +1,5 @@
 ---
 - hosts: all
-  user: root
   roles:
       - base-configuration
       - change-vm-hostname
