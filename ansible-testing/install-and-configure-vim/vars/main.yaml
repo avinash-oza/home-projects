@@ -1,4 +1,4 @@
 dotfiles_repo: https://github.com/avinash-oza/dotfiles.git
-user_home_directory: /home/avi
+user_home_directory: /home/vagrant
 vundle_repo: https://github.com/VundleVim/Vundle.vim.git
 
