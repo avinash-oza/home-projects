@@ -42,3 +42,5 @@
 - name: add to wheel group
   user: name=avi groups=wheel append=yes state=present createhome=no
 
+- name: install ntp
+  apt: pkg=ntp  state=installed
