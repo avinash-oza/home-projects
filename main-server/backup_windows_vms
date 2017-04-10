@@ -1,14 +1,27 @@
 #!/bin/bash
 
-echo 'Called shutdown for win7 and dad-vm'
-sudo virsh shutdown win7
-sudo virsh shutdown dad-vm
-# Wait for 2m
-echo 'Waiting 1.5m for shutdown to finish'
-sleep 1.5m
-echo 'Doing rsync'
-#sudo rsync -aPi /mnt/vm_drive_ssd/vm_drives/ /mnt/vm_drive_raid1/ssd_vm_drives/
-echo 'Starting up vms'
-sudo virsh start win7
-sleep 30s
-sudo virsh start dad-vm
+# SET TEMP DIR
+export -p TMPDIR=/mnt/raid0/tmp_dir
+
+array=("win7" "dad-vm")
+image_file_names=("avi-pc.qcow2" "dad-vm.qcow2")
+wait_time=1.5 # How long to wait after shutting
+
+for one_item in "${!array[@]}"
+do
+    MACHINE_NAME=${array[one_item]}
+    IMAGE_FILE=${image_file_names[$one_item]}
+    SRC_FILE=/mnt/vm_drive_ssd/vm_drives/$IMAGE_FILE
+    DEST_FILE=/mnt/vm_drive_raid1/ssd_vm_drives/$IMAGE_FILE
+
+    echo "Shutting down $MACHINE_NAME"
+    virsh shutdown $MACHINE_NAME
+    echo "Waiting $wait_time m for shutdown of $MACHINE_NAME"
+    sleep ${wait_time}m
+
+    echo "Using virt-sparsify to copy image $SRC_FILE to $DEST_FILE"
+    virt-sparsify $SRC_FILE $DEST_FILE
+
+    echo "Starting up $MACHINE_NAME"
+    virsh start $MACHINE_NAME
+done
