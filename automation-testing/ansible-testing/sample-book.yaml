@@ -4,3 +4,4 @@
       - remove-cdrom-and-switch-to-cdn
       - base-configuration
 #     - configure-deploy-user-for-sudo
+#     - install-and-configure-vim
