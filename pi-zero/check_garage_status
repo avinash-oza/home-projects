@@ -1,0 +1,3 @@
+#! /bin/bash
+cd /home/pi/home-projects/pi-zero
+python sr-04.py
