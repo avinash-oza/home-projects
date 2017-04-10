@@ -1,10 +1,15 @@
 ---
 - hosts: all
   vars:
-      user_home_directory: /home/TESTING
-    
+      user_home_directory: /home/avi    
+      user_to_provide_sudo_to: avi
+      new_host_name: httpd-server
+  vars_prompt:
+      - name: 'sudo_user_password'
+        prompt: 'Password for new sudo user?'
   roles:
-#     - remove-cdrom-and-switch-to-cdn
-#     - base-configuration
-#     - configure-deploy-user-for-sudo
-      - install-and-configure-vim
+      - remove-cdrom-and-switch-to-cdn
+      - change-vm-hostname
+      - base-configuration
+      - configure-deploy-user-for-sudo
+#     - install-and-configure-vim
