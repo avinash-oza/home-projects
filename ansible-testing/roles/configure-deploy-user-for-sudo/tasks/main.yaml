@@ -19,8 +19,8 @@
 - name: create deployment/sudo user
   user:
     name: "{{ user_to_provide_sudo_to }}" 
-    password: {{ sudo_user_password | password_hash('sha512') }} 
+    password: "{{ sudo_user_password | password_hash('sha512') }}"
 
 - name: add to wheel group
-  user: name={{ user_to_provide_sudo_to }} groups=wheel append=yes state=present createhome=no
+  user: name="{{ user_to_provide_sudo_to }}" groups=wheel append=yes state=present createhome=no
 

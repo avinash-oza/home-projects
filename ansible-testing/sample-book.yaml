@@ -1,7 +1,10 @@
 ---
 - hosts: all
+  vars:
+      user_home_directory: /home/TESTING
+    
   roles:
-      - remove-cdrom-and-switch-to-cdn
-      - base-configuration
+#     - remove-cdrom-and-switch-to-cdn
+#     - base-configuration
 #     - configure-deploy-user-for-sudo
-#     - install-and-configure-vim
+      - install-and-configure-vim
