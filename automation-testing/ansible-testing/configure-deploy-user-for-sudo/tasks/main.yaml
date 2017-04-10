@@ -1,0 +1,26 @@
+---
+# configure sudo for other operations
+- name: install sudo
+  apt: pkg=sudo  state=installed update_cache=true
+
+- name: Check for wheel group
+  group:
+    name: wheel
+    state: present
+
+- name: Allow wheel group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: create deployment/sudo user
+  user:
+    name: "{{ user_to_provide_sudo_to }}" 
+    password: {{ sudo_user_password | password_hash('sha512') }} 
+
+- name: add to wheel group
+  user: name={{ user_to_provide_sudo_to }} groups=wheel append=yes state=present createhome=no
+
