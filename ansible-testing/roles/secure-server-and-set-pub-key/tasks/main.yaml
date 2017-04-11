@@ -1,0 +1,23 @@
+---
+- name: Add ssh key for deploy user
+  authorized_key:
+    user: "{{ sudo_user_to_configure }}"
+    state: present
+    key: "{{ lookup('file', 'id_rsa.pub') }}"
+
+- name: Disable password based login
+  notify:
+    - restart sshd
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?PasswordAuthentication"
+    line: "PasswordAuthentication no"
+
+- name: Disable root login
+  notify:
+    - restart sshd
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?PermitRootLogin"
+    line: "PermitRootLogin no"
+
