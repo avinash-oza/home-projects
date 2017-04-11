@@ -6,16 +6,6 @@
     - phpmyadmin
     - apache2
 
-- name: copy apache2 configuration
-  copy:
-      src: "phpmyadmin/{{ item }}"
-      dest: /etc/phpmyadmin
-      owner: root
-      group: root
-      mode: 0644
-  with_items:
-      - apache.conf
-
 - name: Add in phpmyadmin configuration
   template:
       src: "{{ item }}.j2"
@@ -31,7 +21,7 @@
   file:
       path: /etc/apache2/conf.d
       state: directory
-      mode: 0755
+      mode: 0644
       owner: root
       group: root
 
