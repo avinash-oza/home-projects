@@ -1,15 +1,16 @@
 ---
 - hosts: all
+  become: true 
+  remote_user: vagrant
   vars:
-      user_home_directory: /home/avi    
-      user_to_provide_sudo_to: avi
+      user_to_configure: deployment_user 
       new_host_name: httpd-server
   vars_prompt:
       - name: 'sudo_user_password'
         prompt: 'Password for new sudo user?'
   roles:
-      - remove-cdrom-and-switch-to-cdn
-      - change-vm-hostname
-      - base-configuration
-      - configure-deploy-user-for-sudo
-#     - install-and-configure-vim
+      - role: remove-cdrom-and-switch-to-cdn
+      - role: change-vm-hostname
+      - role: base-configuration
+      - role: configure-deploy-user-for-sudo
+      - role: install-and-configure-vim-for-user
