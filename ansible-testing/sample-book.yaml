@@ -7,9 +7,6 @@
       new_host_name: httpd-server
   vars_files:
       - passwords.yaml
-  vars_prompt:
-      - name: 'sudo_user_password'
-        prompt: 'Password for new sudo user?'
   roles:
 #     - role: remove-cdrom-and-switch-to-cdn
 #     - role: change-vm-hostname
