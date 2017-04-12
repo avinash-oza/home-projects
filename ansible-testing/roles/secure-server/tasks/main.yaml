@@ -4,12 +4,6 @@
     name: root 
     password: "{{ lookup('password', 'credentials/root/password.txt length=40') | password_hash('sha512') }}"
 
-- name: Add ssh key for deploy user
-  authorized_key:
-    user: "{{ sudo_user_to_configure }}"
-    state: present
-    key: "{{ lookup('file', 'id_rsa.pub') }}"
-
 - name: Disable password based login
   notify:
     - restart sshd

@@ -19,9 +19,16 @@
 - name: create deployment/sudo user
   user:
     name: "{{ sudo_user_to_configure }}" 
-    password: "{{ sudo_user_password | password_hash('sha512') }}"
+    password: "{{ lookup('password', 'credentials/deploy_user/password.txt length=40') | password_hash('sha512') }}"
     shell: /bin/bash
 
 - name: add to sudo group
   user: name="{{ sudo_user_to_configure }}" groups=sudo append=yes state=present createhome=no
+
+- name: Add ssh key for deploy user
+  authorized_key:
+    user: "{{ sudo_user_to_configure }}"
+    state: present
+    key: "{{ lookup('file', 'id_rsa.pub') }}"
+
 

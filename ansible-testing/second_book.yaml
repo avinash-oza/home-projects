@@ -10,7 +10,6 @@
       - passwords.yaml
   roles:
 #     - role: change-vm-hostname
-      - role: remove-cdrom-and-switch-to-cdn
       - role: base-configuration
       - role: install-and-configure-vim-for-user
       - role: disable-extra-users
