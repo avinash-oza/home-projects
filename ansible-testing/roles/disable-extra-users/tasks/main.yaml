@@ -1,0 +1,23 @@
+---
+- name: Delete extra users
+  become: true
+  become_user: "{{ sudo_user_to_configure }}"
+  user:
+    name: "{{ item }}"
+    state: absent
+    remove: true
+  with_items:
+    - pi
+    - avi
+    - vagrant
+
+# name: Delete old home directories
+# become: true
+# become_user: "{{ sudo_user_to_configure }}"
+# file:
+#   state: absent
+#   path: "/home/{{ item }}/"
+# with_items:
+#   - pi
+#   - avi
+#   - vagrant

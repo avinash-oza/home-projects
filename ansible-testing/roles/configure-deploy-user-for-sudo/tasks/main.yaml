@@ -20,7 +20,8 @@
   user:
     name: "{{ sudo_user_to_configure }}" 
     password: "{{ sudo_user_password | password_hash('sha512') }}"
+    shell: /bin/bash
 
-- name: add to wheel group
+- name: add to sudo group
   user: name="{{ sudo_user_to_configure }}" groups=sudo append=yes state=present createhome=no
 

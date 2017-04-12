@@ -2,17 +2,19 @@
 - hosts: all
   become: true 
   remote_user: vagrant
+# remote_user: deploy
   vars:
-      sudo_user_to_configure: deployment_user 
-      user_to_configure: deployment_user 
+      sudo_user_to_configure: deploy 
+      user_to_configure: deploy 
       new_host_name: httpd-server
   vars_files:
       - passwords.yaml
   roles:
+      - role: configure-deploy-user-for-sudo
 #     - role: remove-cdrom-and-switch-to-cdn
 #     - role: change-vm-hostname
 #     - role: base-configuration
-      - role: configure-deploy-user-for-sudo
 #     - role: install-and-configure-vim-for-user
 #     - role: install-and-configure-phpmyadmin
       - role: secure-server-and-set-pub-key
+      - role: disable-extra-users
