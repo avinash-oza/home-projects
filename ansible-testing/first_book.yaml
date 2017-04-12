@@ -1,8 +1,8 @@
 ---
 - hosts: all
-# become: true 
-  remote_user: root
-# remote_user: vagrant
+  become: true 
+# remote_user: root
+  remote_user: deploy
   vars:
       sudo_user_to_configure: deploy 
       user_to_configure: deploy 

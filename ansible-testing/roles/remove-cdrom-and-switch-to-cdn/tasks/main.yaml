@@ -11,13 +11,13 @@
   apt_repository:
     repo: "deb-src http://ftp.us.debian.org/debian/ jessie main"
     state: absent
-- name: add httpredir mirrors
+- name: add cdn mirrors
   apt_repository:
-    repo: "deb http://httpredir.debian.org/debian/ jessie main"
+    repo: "deb http://{{ debian_cdn_host }}/debian/ jessie main"
     state: present
-- name: add http mirrors source
+- name: add cdn mirrors source
   apt_repository:
-    repo: "deb-src http://httpredir.debian.org/debian/ jessie main"
+    repo: "deb-src http://{{ debian_cdn_host }}/debian/ jessie main"
     state: present
     update_cache: yes
     # only add on the last one
