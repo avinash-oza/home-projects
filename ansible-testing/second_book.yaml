@@ -12,5 +12,6 @@
 #     - role: change-vm-hostname
       - role: base-configuration
       - role: install-and-configure-vim-for-user
-      - role: disable-extra-users
+      - role: configure-environment-for-user
+#     - role: disable-extra-users
 #     - role: install-and-configure-phpmyadmin

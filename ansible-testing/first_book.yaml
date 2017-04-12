@@ -1,8 +1,8 @@
 ---
 - hosts: all
-  become: true 
-# remote_user: root
-  remote_user: deploy
+# become: true 
+  remote_user: root
+# remote_user: deploy
   vars:
       sudo_user_to_configure: deploy 
       user_to_configure: deploy 
@@ -11,6 +11,6 @@
       - passwords.yaml
   roles:
       # remove cdrom must be first otherwise it will hang waiting for cd
-      - role: remove-cdrom-and-switch-to-cdn
+#     - role: remove-cdrom-and-switch-to-cdn
       - role: configure-deploy-user-for-sudo
       - role: secure-server
