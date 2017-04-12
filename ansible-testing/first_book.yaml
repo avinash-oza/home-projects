@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: true 
+  remote_user: root
+  vars:
+      sudo_user_to_configure: deploy 
+      user_to_configure: deploy 
+      new_host_name: httpd-server
+  vars_files:
+      - passwords.yaml
+  roles:
+      - role: configure-deploy-user-for-sudo
+      - role: secure-server-and-set-pub-key

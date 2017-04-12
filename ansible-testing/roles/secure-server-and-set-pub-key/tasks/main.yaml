@@ -1,4 +1,9 @@
 ---
+- name: scramble root password
+  user:
+    name: root 
+    password: "{{ lookup('password', 'credentials/root/password.txt length=40') | password_hash('sha512') }}"
+
 - name: Add ssh key for deploy user
   authorized_key:
     user: "{{ sudo_user_to_configure }}"

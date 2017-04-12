@@ -1,7 +1,6 @@
 ---
 - name: Delete extra users
   become: true
-  become_user: "{{ sudo_user_to_configure }}"
   user:
     name: "{{ item }}"
     state: absent
