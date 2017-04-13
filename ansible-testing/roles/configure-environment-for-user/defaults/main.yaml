@@ -1,0 +1,4 @@
+dotfiles_repo: https://github.com/avinash-oza/dotfiles.git
+user_home_directory: /home/{{ user_to_configure }}
+vundle_repo: https://github.com/VundleVim/Vundle.vim.git
+
