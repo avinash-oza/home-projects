@@ -1,0 +1,11 @@
+---
+- hosts: all
+# hosts: mysql-servers
+  become: true 
+  remote_user: vagrant
+  vars:
+      - mysql_root_password:  "{{ lookup('password', 'credentials/mysql/root.txt length=15') }}"
+      - mysql_backups_git_private_key_path: /home/avi/.ssh/id_rsa_remote
+  roles:
+      - role: base-configuration
+      - role: install-and-configure-mysql-monitoring
