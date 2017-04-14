@@ -49,14 +49,11 @@ distance *= 0.393701
 exit_code = None
 
 if distance > DISTANCE_THRESHOLD:
-    print "CLOSED", distance, "in"
+    print ("CLOSED {0:.2f} in".format(distance))
     exit_code = 0
 else:
-    print "OPEN", distance , "in"
+    print ("OPEN {0:.2f} in".format(distance))
     exit_code = 2
 
 GPIO.cleanup()
 sys.exit(exit_code)
-
-
-
