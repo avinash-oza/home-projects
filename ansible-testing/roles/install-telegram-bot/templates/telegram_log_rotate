@@ -1,5 +1,6 @@
 {{ telegram_checkout_location }}/telegram-bot.log {
     missingok
+    copytruncate
     notifempty
     compress
     size 1M
