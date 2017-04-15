@@ -21,7 +21,6 @@
     repo: "{{ telegram_bot_repo }}"
     dest: "{{ telegram_checkout_location }}"
     accept_hostkey: yes
-    force: yes # Wipes changes but makes the book succeed
 
 - name: install telegram-bot virtualenv
 # become: yes
