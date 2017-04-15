@@ -1,0 +1,13 @@
+[Unit]
+Description=Start telegram bot
+
+[Service]
+Type=forking
+User={{ telegram_user_account }}
+Group={{ telegram_user_account }}
+ExecStart={{ telegram_checkout_location }}/start_telegram_bot.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
