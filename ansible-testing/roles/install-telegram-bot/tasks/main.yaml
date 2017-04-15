@@ -49,6 +49,12 @@
     state: directory
     recurse: yes
 
+- name: Configure rotation of logfile
+# become: yes
+# become_user: "{{ telegram_user_account }}"
+  template:
+    src: telegram_log_rotate
+    dest: "/etc/logrotate.d/telegram_log_rotate"
   
 # name: Copy systemd file for starting telegram-bot on boot
 # become: yes
