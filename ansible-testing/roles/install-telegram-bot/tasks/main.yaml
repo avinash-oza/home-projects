@@ -12,8 +12,15 @@
   user:
     name: "{{ telegram_user_account }}"
     state: present
+    generate_ssh_key: true # To allow us to ssh to other devices
 
-# Configure vim with plugins and dotfiles
+- name: Copy ssh pub key to local
+  fetch:
+    src: "/home/{{ telegram_user_account }}/.ssh/id_rsa.pub"
+    dest: "{{ telegram_user_public_key_location }}"
+    fail_on_missing: true # This key is needed later on so we must fail
+    flat: yes
+
 - name: checkout telegram-bot
 # become: yes
 # become_user: "{{ telegram_user_account }}"
