@@ -1,0 +1,23 @@
+- name: Create test-user
+  user:
+    name: test-user
+    state: present
+    generate_ssh_key: yes
+
+- name: register ssh pub key
+  shell: cat /home/test-user/.ssh/id_rsa.pub
+  register: ssh_pub_key
+
+# name: Add key to github
+# local_action:
+#   module: github_key
+#   name: Test key
+#   token: ABCDEF
+#   pubkey: "{{ ssh_pub_key.stdout }}"
+
+- name: remove key from github
+  local_action:
+    module: github_key
+    state: absent
+    name: Test key
+    token: ABCDEF
