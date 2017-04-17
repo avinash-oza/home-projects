@@ -1,23 +1,26 @@
-- name: Create test-user
-  user:
-    name: test-user
-    state: present
-    generate_ssh_key: yes
-
-- name: register ssh pub key
-  shell: cat /home/test-user/.ssh/id_rsa.pub
+- name: Register user pub key
+  shell: cat /home/{{ user_to_configure}}/.ssh/id_rsa.pub
   register: ssh_pub_key
 
-# name: Add key to github
-# local_action:
-#   module: github_key
-#   name: Test key
-#   token: ABCDEF
-#   pubkey: "{{ ssh_pub_key.stdout }}"
+- name: Add key to github
+  github_key:
+    name: "{{ user_to_configure }} @ {{ ansible_hostname }}"
+    token: "{{ github_api_key }}"
+    pubkey: "{{ ssh_pub_key.stdout }}"
 
-- name: remove key from github
-  local_action:
-    module: github_key
-    state: absent
-    name: Test key
-    token: ABCDEF
+- name: Clone home-projects repo
+  git:
+    repo: "{{ home_projects_repo }}"
+    dest: "/home/{{ user_to_configure }}/home-projects"
+    accept_hostkey: yes
+    key_file: "/home/{{ user_to_configure }}/.ssh/id_rsa"
+
+- name: Convert ownership of repo to user
+  file:
+    path: "/home/{{ user_to_configure }}/home-projects"
+    owner: "{{ user_to_configure }}"
+    group: "{{ user_to_configure }}"
+    state: directory
+    recurse: yes
+
+
