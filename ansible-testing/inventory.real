@@ -1,5 +1,5 @@
 [main-pi-server]
-b1
+172.16.2.100
 
 [garage-door-servers]
-b2
+172.16.2.102
