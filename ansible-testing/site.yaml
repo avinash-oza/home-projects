@@ -1,0 +1,36 @@
+---
+# The remote user may need to be changed
+#
+- hosts: all
+  become: true 
+  remote_user: deploy
+# remote_user: vagrant
+  vars:
+    is_raspberry_pi: true # Do not add cdn mirrors for raspi
+  roles:
+      - { role: remove-cdrom-and-switch-to-cdn, when: not is_raspberry_pi }
+      - configure-deploy-user-for-sudo
+      - base-configuration
+      - configure-environment-for-user
+      - secure-server
+      - install-and-configure-vim-for-user
+
+##################### 
+- hosts: main-pi-server
+  become: true
+  remote_user: deploy
+# remote_user: vagrant
+  roles:
+      - install-telegram-bot
+
+##################### 
+
+- hosts: garage-door-servers
+  become: true
+  remote_user: deploy
+# remote_user: vagrant
+  vars:
+      user_to_configure: "{{ garage_door_user }}"
+  roles:
+      - setup-garage-door-user
+      - checkout-home-projects
