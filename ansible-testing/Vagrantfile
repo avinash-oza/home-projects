@@ -85,8 +85,12 @@ Vagrant.configure("2") do |config|
       b1.vm.box = "debian/jessie64"
       b1.vm.network  "private_network", ip: "192.168.121.94"
   end
-# config.vm.define "b2" do |b2|
-#     b2.vm.box = "debian/jessie64"
-#     b2.vm.network  "private_network", ip: "192.168.121.95"
-# end
+  config.vm.define "b2" do |b2|
+      b2.vm.box = "debian/jessie64"
+      b2.vm.network  "private_network", ip: "192.168.121.95"
+  end
+  config.vm.define "b3" do |b3|
+      b3.vm.box = "debian/jessie64"
+      b3.vm.network  "private_network", ip: "192.168.121.96"
+  end
 end

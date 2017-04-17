@@ -3,10 +3,10 @@
 #
 - hosts: all
   become: true 
-  remote_user: deploy
-# remote_user: vagrant
+# remote_user: deploy
+  remote_user: vagrant
   vars:
-    is_raspberry_pi: true # Do not add cdn mirrors for raspi
+    is_raspberry_pi: false # Do not add cdn mirrors for raspi
   roles:
       - { role: remove-cdrom-and-switch-to-cdn, when: not is_raspberry_pi }
       - configure-deploy-user-for-sudo
@@ -18,8 +18,8 @@
 ##################### 
 - hosts: main-pi-server
   become: true
-  remote_user: deploy
-# remote_user: vagrant
+# remote_user: deploy
+  remote_user: vagrant
   roles:
       - install-telegram-bot
 
@@ -27,10 +27,19 @@
 
 - hosts: garage-door-servers
   become: true
-  remote_user: deploy
-# remote_user: vagrant
+# remote_user: deploy
+  remote_user: vagrant
   vars:
       user_to_configure: "{{ garage_door_user }}"
   roles:
       - setup-garage-door-user
       - checkout-home-projects
+
+#########################
+- hosts: mysql-servers
+  become: true
+  remote_user: vagrant
+  vars:
+      - mysql_backups_git_private_key_path: /home/avi/.ssh/id_rsa_remote
+  roles:
+    - role: install-mysql-phpmyadmin-restore-dumps

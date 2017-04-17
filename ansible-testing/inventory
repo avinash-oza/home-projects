@@ -3,3 +3,6 @@ b1
 
 [garage-door-servers]
 b2
+
+[mysql-servers]
+b3
