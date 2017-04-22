@@ -79,3 +79,13 @@
   with_items:
     - temperature
     - telegram_bot
+
+- name: Create read only user for backups
+  mysql_user: 
+    host: "%"
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    name: "BACKUP"
+    password: "backup"
+    priv: "*.*:LOCK TABLES,SELECT,USAGE"
+    state: present
