@@ -1,0 +1,24 @@
+---
+- name: Check the gpio group exists or create
+  group:
+    name: gpio
+    state: present
+
+- name: Create garage-door user
+  user:
+    name: "{{ garage_door_user }}"
+    groups: gpio # to allow access to sensors
+    append: yes
+    state: present
+    generate_ssh_key: yes
+
+- name: Copy telegram-bot public key
+  copy:
+    src: "{{ telegram_user_public_key_location }}"
+    dest: "{{ telegram_user_public_key_location }}"
+
+- name: add telegram-user pub key
+  authorized_key:
+    user: "{{ garage_door_user }}"
+    key: "{{ lookup('file', '{{ telegram_user_public_key_location }}') }}"
+    state: present

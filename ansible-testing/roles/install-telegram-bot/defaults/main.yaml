@@ -1,0 +1,6 @@
+telegram_user_account: telegram-bot
+telegram_checkout_location: /home/{{ telegram_user_account }}/telegram-bot
+telegram_bot_virtual_env_location: /home/{{ telegram_user_account }}/telegram-virtual-env
+telegram_bot_repo: https://github.com/avinash-oza/telegram-bot.git
+telegram_user_public_key_location: /tmp/telegram-bot-ssh.pub
+

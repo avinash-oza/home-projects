@@ -1,0 +1,4 @@
+github_api_key: API_KEY
+sudo_user_to_configure: deploy 
+user_to_configure: "{{ sudo_user_to_configure }}"
+telegram_user_public_key_location: /tmp/telegram-bot-ssh.pub
