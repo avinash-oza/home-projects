@@ -23,6 +23,7 @@
   with_items:
     - texstudio
     - texlive-latex-recommended
+    - texlive-math-extra
 
 - name: install python packages
   apt: pkg={{item}}  state=installed update_cache=false
