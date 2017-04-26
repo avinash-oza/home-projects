@@ -66,6 +66,7 @@
     - telegram_bot
     - asterisk
     - asteriskcdrdb
+    - phpmyadmin
 
 - name: Create telegram and temperature user and grant access
   mysql_user: 
