@@ -47,6 +47,16 @@
     group: "{{ telegram_user_account }}"
     mode: 0755
 
+- name: Create telegram-bot config file
+# become: yes
+# become_user: "{{ telegram_user_account }}"
+  template:
+    src: bot.config
+    dest: "{{ telegram_checkout_location }}/bot.config"
+    owner: "{{ telegram_user_account }}"
+    group: "{{ telegram_user_account }}"
+    mode: 0744
+
 - name: Convert ownership of all files in home directory to user
   file:
     path: "/home/{{ telegram_user_account }}"
