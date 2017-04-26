@@ -18,7 +18,7 @@ do
     SNAPSHOT_FILE=/mnt/raid0/vm_drives/${SNAPSHOT_NAME}.qcow2
 
     # Dump xml for machine
-    virsh dumpxml $MACHINE_NAME > ${MACHINE_NAME}.xml
+    virsh dumpxml $MACHINE_NAME > /mnt/vm_drive_raid1/vm_drives/${MACHINE_NAME}.xml
     virsh domblklist $MACHINE_NAME
     virsh snapshot-create-as --domain $MACHINE_NAME $SNAPSHOT_NAME --diskspec vda,file=$SNAPSHOT_FILE --quiesce --disk-only --atomic
     virsh domblklist $MACHINE_NAME
