@@ -1,9 +1,10 @@
 ---
-- name: install nagios3
+- name: install nagios3 and plugins
   apt: pkg={{item}}  state=installed update_cache=false
   with_items:
     - nagios3
     - nagios-plugins-contrib
+    - nagios-nrpe-plugin
 
 - name: Symlink case temperature plugin with nagios plugins
   file:
@@ -13,74 +14,23 @@
     owner: root
     group: root
 
-# name: Copy ssh pub key to local
-# fetch:
-#   src: "/home/{{ telegram_user_account }}/.ssh/id_rsa.pub"
-#   dest: "{{ telegram_user_public_key_location }}"
-#   fail_on_missing: true # This key is needed later on so we must fail
-#   flat: yes
+- name: Allow nagios user sudo access for plugins
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^nagios'
+    line: "nagios ALL=(ALL) NOPASSWD:/usr/lib/nagios/plugins/,/home/pi/home-projects/pi,/usr/local/bin/Adafruit_DHT/"
+    validate: 'visudo -cf %s'
 
-# name: checkout telegram-bot
-# become: yes
-# become_user: "{{ telegram_user_account }}"
-# git:
-#   repo: "{{ telegram_bot_repo }}"
-#   dest: "{{ telegram_checkout_location }}"
-#   accept_hostkey: yes
+- name: Generate ssh key for nagios user
+  user:
+    name: nagios
+    generate_ssh_key: yes
+    ssh_key_comment: "nagios@{{ ansible_hostname }}"
 
-# name: install telegram-bot virtualenv
-# become: yes
-# become_user: "{{ telegram_user_account }}"
-# pip:
-#   requirements: "{{ telegram_checkout_location }}/requirements.txt"
-#   virtualenv_python: python2.7
-#   virtualenv: "{{ telegram_bot_virtual_env_location }}"
-
-# name: Create telegram-bot start file
-# become: yes
-# become_user: "{{ telegram_user_account }}"
-# template:
-#   src: start_telegram_bot.sh
-#   dest: "{{ telegram_checkout_location }}/start_telegram_bot.sh"
-#   owner: "{{ telegram_user_account }}"
-#   group: "{{ telegram_user_account }}"
-#   mode: 0755
-
-# name: Create telegram-bot config file
-# become: yes
-# become_user: "{{ telegram_user_account }}"
-# template:
-#   src: bot.config
-#   dest: "{{ telegram_checkout_location }}/bot.config"
-#   owner: "{{ telegram_user_account }}"
-#   group: "{{ telegram_user_account }}"
-#   mode: 0744
-
-# name: Convert ownership of all files in home directory to user
-# file:
-#   path: "/home/{{ telegram_user_account }}"
-#   owner: "{{ telegram_user_account }}"
-#   group: "{{ telegram_user_account }}"
-#   state: directory
-#   recurse: yes
-
-# name: Configure rotation of logfile
-# become: yes
-# become_user: "{{ telegram_user_account }}"
-# template:
-#   src: telegram_log_rotate
-#   dest: "/etc/logrotate.d/telegram_log_rotate"
-  
-# name: Copy systemd file for starting telegram-bot on boot
-# become: yes
-# template:
-#   src: telegram-bot.service
-#   dest: /etc/systemd/system
-#   mode: 0644
-
-# name: Enable telegram-bot to run on boot and start
-# become: yes
-# service:
-#   name: telegram-bot
-#   state: started
-#   enabled: true
+- name: Fetch public key to local machine
+  fetch:
+    src: /var/lib/nagios/.ssh/id_rsa.pub
+    dest: "{{ playbook_dir }}/nagios_pub_key.pub"
+    fail_on_missing: yes
+    flat: yes
