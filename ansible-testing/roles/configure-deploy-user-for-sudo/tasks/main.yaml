@@ -21,6 +21,7 @@
     name: "{{ sudo_user_to_configure }}" 
     password: "{{ lookup('password', 'credentials/deploy_user/password.txt length=40') | password_hash('sha512') }}"
     shell: /bin/bash
+    generate_ssh_key: yes
 
 - name: add to sudo group
   user: name="{{ sudo_user_to_configure }}" groups=sudo append=yes state=present createhome=no

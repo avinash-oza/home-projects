@@ -1,0 +1,36 @@
+---
+- name: install nagios3 and plugins
+  apt: pkg={{item}}  state=installed update_cache=false
+  with_items:
+    - nagios3
+    - nagios-plugins-contrib
+    - nagios-nrpe-plugin
+
+- name: Symlink case temperature plugin with nagios plugins
+  file:
+    src: "/home/{{ user_to_configure }}/home-projects/pi"
+    dest: /usr/lib/nagios/plugins/case_temperature
+    state: link
+    owner: root
+    group: root
+
+- name: Allow nagios user sudo access for plugins
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^nagios'
+    line: "nagios ALL=(ALL) NOPASSWD:/usr/lib/nagios/plugins/,/home/pi/home-projects/pi,/usr/local/bin/Adafruit_DHT/"
+    validate: 'visudo -cf %s'
+
+- name: Generate ssh key for nagios user
+  user:
+    name: nagios
+    generate_ssh_key: yes
+    ssh_key_comment: "nagios@{{ ansible_hostname }}"
+
+- name: Fetch public key to local machine
+  fetch:
+    src: /var/lib/nagios/.ssh/id_rsa.pub
+    dest: "{{ playbook_dir }}/nagios_pub_key.pub"
+    fail_on_missing: yes
+    flat: yes

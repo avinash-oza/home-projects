@@ -1,0 +1,29 @@
+- name: install nagios NRPE server
+  apt: pkg={{item}}  state=installed update_cache=false
+  with_items:
+    - nagios-nrpe-server
+
+- name: Edit config to allow NRPE server to connect to this host
+  lineinfile:
+    dest: "/etc/nagios/nrpe.cfg"
+    state: present
+    regexp: "^allowed_hosts"
+    line: "allowed_hosts={{ hostvars[groups['nagios-server'][0]]['ansible_eth0']['ipv4']['address'] }}"
+
+- name: Restart nrpe
+  service:
+    name: nagios-nrpe-server
+    state: restarted
+
+- name: Set shell for nagios user
+  user:
+    name: nagios
+    state: present
+    shell: /bin/sh
+
+- name: Allow nagios-server to ssh into host without password
+  authorized_key:
+    user: nagios
+    state: present
+    key: "{{ lookup('file', playbook_dir +'/nagios_pub_key.pub') }}"
+

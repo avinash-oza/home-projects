@@ -1,9 +1,36 @@
+#! /bin/bash
 # Work in progress
+DATE=`date +%Y-%m-%d-%H-%M-%S`
 
+# SET TEMP DIR
+export -p TMPDIR=/mnt/raid0/tmp_dir
+
+array=("reverse-test" "torrent-box" "mysql-server")
+image_file_names=("reverse-proxy.qcow2" "seedbox.qcow2" "mysql-server.qcow2")
+
+for one_item in "${!array[@]}"
+do
+    MACHINE_NAME=${array[one_item]}
+    IMAGE_FILE=${image_file_names[$one_item]}
+    SRC_FILE=/mnt/raid0/vm_drives/$IMAGE_FILE
+    DEST_FILE=/mnt/vm_drive_raid1/vm_drives/$IMAGE_FILE
+    SNAPSHOT_NAME=backup-snapshot-${MACHINE_NAME}-${DATE}
+    SNAPSHOT_FILE=/mnt/raid0/vm_drives/${SNAPSHOT_NAME}.qcow2
+
+    # Dump xml for machine
+    virsh dumpxml $MACHINE_NAME > /mnt/vm_drive_raid1/vm_drives/${MACHINE_NAME}.xml
+    virsh domblklist $MACHINE_NAME
+    virsh snapshot-create-as --domain $MACHINE_NAME $SNAPSHOT_NAME --diskspec vda,file=$SNAPSHOT_FILE --quiesce --disk-only --atomic
+    virsh domblklist $MACHINE_NAME
+    virt-sparsify $SRC_FILE $DEST_FILE
+    
+    virsh blockcommit $MACHINE_NAME vda --active --verbose --pivot
+    # Remove old snapshot
+    # delete from vm. May throw an error
+    virsh snapshot-delete $MACHINE_NAME $SNAPSHOT_NAME
+    # delete from disk
+    rm $SNAPSHOT_FILE
+
+done
 # Make machine names parameters and do one by one
-sudo virsh domblklist dev-machine
-sudo virsh snapshot-create-as --domain dev-machine backup-sate --diskspec vda,file=/mnt/raid0/vm_drives/test_backup_state.qcow2 --quiesce --disk-only --atomic
-sudo virsh domblklist dev-machine
-sudo cp /mnt/raid0/vm_drives/dev-machine.qcow2 /mnt/raid0/vm_drives/dev-machine_backup.qcow2
-sudo virsh blockcommit dev-machine vda --active --verbose --pivot
 
