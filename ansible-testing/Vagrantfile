@@ -17,15 +17,17 @@ Vagrant.configure("2") do |config|
   if Vagrant.has_plugin?("vagrant-cachier")
       config.cache.scope = :machine
       config.cache.enable :apt
+      config.cache.override_directory = "/srv/vagrant"
       config.cache.synced_folder_opts = {
           type: :nfs,
           mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
         }
   end
+  config.vm.synced_folder ".", "/vagrant", disabled: true
 ##########  # FOR DESKTOP
-  config.vm.provider "libvirt" do |libvirt|
-    libvirt.driver = "qemu"
-  end
+# config.vm.provider "libvirt" do |libvirt|
+#   libvirt.driver = "qemu"
+# end
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -85,12 +87,12 @@ Vagrant.configure("2") do |config|
       b1.vm.box = "debian/jessie64"
       b1.vm.network  "private_network", ip: "192.168.121.94"
   end
-  config.vm.define "b2" do |b2|
-      b2.vm.box = "debian/jessie64"
-      b2.vm.network  "private_network", ip: "192.168.121.95"
-  end
-  config.vm.define "b3" do |b3|
-      b3.vm.box = "debian/jessie64"
-      b3.vm.network  "private_network", ip: "192.168.121.96"
-  end
+# config.vm.define "b2" do |b2|
+#     b2.vm.box = "debian/jessie64"
+#     b2.vm.network  "private_network", ip: "192.168.121.95"
+# end
+# config.vm.define "b3" do |b3|
+#     b3.vm.box = "debian/jessie64"
+#     b3.vm.network  "private_network", ip: "192.168.121.96"
+# end
 end
