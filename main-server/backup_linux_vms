@@ -1,12 +1,16 @@
 #! /bin/bash
-# Work in progress
-DATE=`date +%Y-%m-%d-%H-%M-%S`
 
+DATE=`date +%Y-%m-%d-%H-%M-%S`
+# Redirect output to file
+exec 3>&1 1>> /mnt/raid0/logs/linux_vms_backup/logfile-${DATE}.txt 2>&1
+
+set -o xtrace
 # SET TEMP DIR
 export -p TMPDIR=/mnt/raid0/tmp_dir
 
-array=("reverse-test" "torrent-box" "mysql-server")
-image_file_names=("reverse-proxy.qcow2" "seedbox.qcow2" "mysql-server.qcow2")
+# Declare vm names and image names for backup
+array=("reverse-test" "torrent-box" "mysql-server" "dev-machine")
+image_file_names=("reverse-proxy.qcow2" "seedbox.qcow2" "mysql-server.qcow2" "dev-machine.qcow2")
 
 for one_item in "${!array[@]}"
 do
@@ -18,19 +22,17 @@ do
     SNAPSHOT_FILE=/mnt/raid0/vm_drives/${SNAPSHOT_NAME}.qcow2
 
     # Dump xml for machine
-    virsh dumpxml $MACHINE_NAME > /mnt/vm_drive_raid1/vm_drives/${MACHINE_NAME}.xml
-    virsh domblklist $MACHINE_NAME
-    virsh snapshot-create-as --domain $MACHINE_NAME $SNAPSHOT_NAME --diskspec vda,file=$SNAPSHOT_FILE --quiesce --disk-only --atomic
-    virsh domblklist $MACHINE_NAME
-    virt-sparsify $SRC_FILE $DEST_FILE
+    /usr/bin/virsh dumpxml $MACHINE_NAME > /mnt/vm_drive_raid1/vm_drives/${MACHINE_NAME}.xml && \
+    /usr/bin/virsh domblklist $MACHINE_NAME && \
+    /usr/bin/virsh snapshot-create-as --domain $MACHINE_NAME $SNAPSHOT_NAME --diskspec vda,file=$SNAPSHOT_FILE --quiesce --disk-only --atomic --no-metadata && \
+    /usr/bin/virsh domblklist $MACHINE_NAME && \
+    /usr/bin/virt-sparsify $SRC_FILE $DEST_FILE && \
     
-    virsh blockcommit $MACHINE_NAME vda --active --verbose --pivot
-    # Remove old snapshot
-    # delete from vm. May throw an error
-    virsh snapshot-delete $MACHINE_NAME $SNAPSHOT_NAME
+    /usr/bin/virsh blockcommit $MACHINE_NAME vda --active --verbose --pivot && \
+    /usr/bin/virsh domblklist $MACHINE_NAME && \
+    # Remove old snapshot. Currently isnt needed as we create snapshot without metadata
+#   virsh snapshot-delete $MACHINE_NAME --metadata $SNAPSHOT_NAME
     # delete from disk
     rm $SNAPSHOT_FILE
-
 done
-# Make machine names parameters and do one by one
 
