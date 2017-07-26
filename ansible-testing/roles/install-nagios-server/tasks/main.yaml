@@ -14,6 +14,15 @@
     owner: root
     group: root
 
+### UNTESTED. Add seciton for changing config
+- name: Symlink airvpn_checker plugin with nagios plugins
+  file:
+    src: "/home/{{ user_to_configure }}/home-projects/pi/airvpn_checker"
+    dest: /usr/lib/nagios/plugins/check_airvpn_status
+    state: link
+    owner: root
+    group: root
+
 - name: Allow nagios user sudo access for plugins
   lineinfile:
     dest: /etc/sudoers
