@@ -13,7 +13,7 @@
 - name: "Create tar file on {{ inventory_hostname }} for {{ backup_time.stdout }}"
   become: true
   shell:
-    "tar cvpzf /backup_dir/{{ inventory_hostname }}/backup-{{ backup_time.stdout }}.tar.gz --exclude=/proc --exclude=/sys --exclude=/run --exclude=/dev --exclude=/lost+found --exclude=/media --exclude=/mnt --exclude=/sys --exclude=/tmp --exclude=/backup_dir /home"
+    "tar cpzf /backup_dir/{{ inventory_hostname }}/backup-{{ backup_time.stdout }}.tar.gz --exclude=/proc --exclude=/sys --exclude=/run --exclude=/dev --exclude=/lost+found --exclude=/media --exclude=/mnt --exclude=/sys --exclude=/tmp --exclude=/backup_dir /"
 
 - name: Fetch archive back to localhost
   synchronize:
