@@ -1,5 +1,22 @@
 ---
-- name: scramble pi password
+- name: scramble root password
   user:
     name: root 
-    password: "{{ lookup('password', 'credentials/pi/password.txt length=15') | password_hash('sha512') }}"
+    password: "{{ lookup('password', 'credentials/root/password.txt length=15') | password_hash('sha512') }}"
+
+- name: Disable password based login
+  notify:
+    - restart sshd
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?PasswordAuthentication"
+    line: "PasswordAuthentication no"
+
+- name: Disable root login
+  notify:
+    - restart sshd
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?PermitRootLogin"
+    line: "PermitRootLogin no"
+
