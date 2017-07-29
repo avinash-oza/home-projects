@@ -32,4 +32,11 @@
     state: present
     key: "{{ lookup('file', 'id_rsa.pub') }}"
 
+- name: Remove ssh key for deploy user
+  authorized_key:
+    user: "{{ sudo_user_to_configure }}"
+    state: absent
+    key: "{{ lookup('file', 'id_rsa_remove.pub') }}"
+
+
 

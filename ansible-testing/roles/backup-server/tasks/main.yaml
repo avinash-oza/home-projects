@@ -1,0 +1,49 @@
+- name: Register current archive time
+  shell: "TZ=America/New_York date +%m-%d-%y--%I-%M-%p"
+  register: backup_time
+
+- name: Make backup directory on {{ inventory_hostname }}
+  become: true
+  file:
+    path: "/backup_dir/{{ inventory_hostname }}" # To make sure the copy works on the way back
+    state: directory
+    mode: 0755
+    recurse: true
+
+- name: "Create tar file on {{ inventory_hostname }} for {{ backup_time.stdout }}"
+  become: true
+  shell:
+    "tar cvpzf /backup_dir/{{ inventory_hostname }}/backup-{{ backup_time.stdout }}.tar.gz --exclude=/proc --exclude=/sys --exclude=/run --exclude=/dev --exclude=/lost+found --exclude=/media --exclude=/mnt --exclude=/sys --exclude=/tmp --exclude=/backup_dir /home"
+
+- name: Fetch archive back to localhost
+  synchronize:
+    mode: pull
+    compress: no
+    src: "/backup_dir/"
+    dest: "/mnt/raid0/backups/automatic_tar_backups"
+
+- name: "Delete backup_dir from host"
+  become: true
+  file:
+    path: /backup_dir
+    state: absent
+
+- name: Find old files
+  delegate_to: localhost
+  find:
+    paths: "/mnt/raid0/backups/automatic_tar_backups/{{ inventory_hostname }}"
+    age: "8w"
+    recurse: "yes"
+    patterns: "*.tar.gz"
+  register: files_to_delete
+
+- name: Files that will be deleted
+  debug:
+    var: files_to_delete
+
+- name: "Delete old backups for host"
+  delegate_to: localhost
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ files_to_delete.files }}"
