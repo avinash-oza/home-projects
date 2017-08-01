@@ -1,10 +1,17 @@
 #!/bin/bash
 
+DATE=`date +%Y-%m-%d-%H-%M-%S`
+# Redirect output to file
+exec 3>&1 1>> /mnt/raid0/logs/linux_vms_backup/logfile-${DATE}.txt 2>&1
+
+set -o xtrace
 # SET TEMP DIR
 export -p TMPDIR=/mnt/raid0/tmp_dir
 
-array=("win7" "dad-vm")
-image_file_names=("avi-pc.qcow2" "dad-vm.qcow2")
+#array=("win7" "dad-vm")
+array=("win7")
+#image_file_names=("avi-pc.qcow2" "dad-vm.qcow2")
+image_file_names=("avi-pc.qcow2")
 wait_time=1.5 # How long to wait after shutting
 
 for one_item in "${!array[@]}"
@@ -14,14 +21,20 @@ do
     SRC_FILE=/mnt/vm_drive_ssd/vm_drives/$IMAGE_FILE
     DEST_FILE=/mnt/vm_drive_raid1/ssd_vm_drives/$IMAGE_FILE
 
-    echo "Shutting down $MACHINE_NAME"
-    virsh shutdown $MACHINE_NAME
-    echo "Waiting $wait_time m for shutdown of $MACHINE_NAME"
-    sleep ${wait_time}m
+    echo "Shutting down $MACHINE_NAME" && \
+    virsh shutdown $MACHINE_NAME && \
+    echo "Waiting $wait_time m for shutdown of $MACHINE_NAME" && \
+    sleep ${wait_time}m && \
+    /usr/bin/virsh dumpxml $MACHINE_NAME > /mnt/vm_drive_raid1/ssd_vm_drives/${MACHINE_NAME}.xml && \
 
-    echo "Using virt-sparsify to copy image $SRC_FILE to $DEST_FILE"
-    virt-sparsify $SRC_FILE $DEST_FILE
+    echo "Using virt-sparsify to copy image $SRC_FILE to $DEST_FILE" && \
+    virt-sparsify $SRC_FILE $DEST_FILE && \
 
-    echo "Starting up $MACHINE_NAME"
-    virsh start $MACHINE_NAME
+    echo "Starting up $MACHINE_NAME" && \
+    virsh start $MACHINE_NAME && \
+    touch /mnt/vm_drive_raid1/ssd_vm_drives/
 done
+
+#TODO: Make one script to back both up
+/usr/bin/virsh dumpxml dad-vm > /mnt/vm_drive_raid1/vm_drives/dad-vm.xml
+virt-sparsify /mnt/raid0/vm_drives/dad-vm.qcow2 /mnt/vm_drive_raid1/vm_drives/dad-vm.qcow2
