@@ -33,6 +33,7 @@ do
     # Remove old snapshot. Currently isnt needed as we create snapshot without metadata
 #   virsh snapshot-delete $MACHINE_NAME --metadata $SNAPSHOT_NAME
     # delete from disk
+    touch /mnt/vm_drive_raid1/vm_drives/
     rm $SNAPSHOT_FILE
 done
 
