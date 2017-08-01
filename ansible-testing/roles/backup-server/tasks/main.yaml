@@ -2,31 +2,38 @@
   shell: "TZ=America/New_York date +%m-%d-%y--%I-%M-%p"
   register: backup_time
 
+- name: "Make mount point /mnt/raid0"
+  become: true
+  file:
+    path: "/mnt/raid0"
+    state: directory
+
+- name: "Make sure raid0 is in the fstab"
+  become: true
+  mount:
+    name: /mnt/raid0
+    src: 172.16.1.10:/mnt/raid0
+    fstype: nfs
+    opts: nolock
+    state: present
+  when: inventory_hostname != "main-server"
+
+- name: "Mount all partitions (should do only wheen fstab was changed)"
+  become: true
+  command: mount -a
+  when: inventory_hostname != "main-server"
+
 - name: Make backup directory on {{ inventory_hostname }}
   become: true
   file:
-    path: "/backup_dir/{{ inventory_hostname }}" # To make sure the copy works on the way back
+    path: "/mnt/raid0/backups/automatic_tar_backups/{{ inventory_hostname }}" # To make sure the copy works on the way back
     state: directory
     mode: 0755
-    recurse: true
 
 - name: "Create tar file on {{ inventory_hostname }} for {{ backup_time.stdout }}"
   become: true
   shell:
-    "tar cpzf /backup_dir/{{ inventory_hostname }}/backup-{{ backup_time.stdout }}.tar.gz --exclude=/proc --exclude=/sys --exclude=/run --exclude=/dev --exclude=/lost+found --exclude=/media --exclude=/mnt --exclude=/sys --exclude=/tmp --exclude=/backup_dir /"
-
-- name: Fetch archive back to localhost
-  synchronize:
-    mode: pull
-    compress: no
-    src: "/backup_dir/"
-    dest: "/mnt/raid0/backups/automatic_tar_backups"
-
-- name: "Delete backup_dir from host"
-  become: true
-  file:
-    path: /backup_dir
-    state: absent
+    "tar cpzf /mnt/raid0/backups/automatic_tar_backups/{{ inventory_hostname }}/backup-{{ backup_time.stdout }}.tar.gz --exclude=/proc --exclude=/sys --exclude=/run --exclude=/dev --exclude=/lost+found --exclude=/media --exclude=/mnt --exclude=/sys --exclude=/tmp /"
 
 - name: Find old files
   delegate_to: localhost
