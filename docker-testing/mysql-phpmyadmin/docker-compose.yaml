@@ -9,6 +9,8 @@ services:
         ports:
             # Puts on 8080
             - "8080:80"
+        networks:
+            - mysql_network
     db:
         image: mysql
         env_file:
@@ -17,7 +19,13 @@ services:
             - "3306:3306"
         volumes:
             - ./db:/var/lib/mysql
+        networks:
+            - mysql_network
 
 volumes:
     db:
         driver: local
+
+networks:
+    mysql_network: 
+        driver: bridge
