@@ -4,25 +4,15 @@ services:
         image: phpmyadmin/phpmyadmin:latest
         links:
             - "db:db"
-        environment:
-            PMA_ARBITRARY: 1
-#           MYSQL_USER: homestead
-#           MYSQL_PASSWORD: secret
-#           MYSQL_ROOT_PASSWORD: root
-#       depends_on:
-#           - mysql_test
+        env_file:
+            - db-variables.env
         ports:
             # Puts on 8080
             - "8080:80"
-#       volumes:
-#           - /home/avi/config.inc.php:/etc/phpmyadmin/config.user.inc.php
     db:
         image: mysql
-#       environment:
-#           - MYSQL_DATABASE=homestead
-#           - MYSQL_USER=homestead
-#           - MYSQL_PASSWORD=secret
-#           - MYSQL_ROOT_PASSWORD=root
+        env_file:
+            - db-variables.env
         ports:
             - "3306:3306"
         volumes:
