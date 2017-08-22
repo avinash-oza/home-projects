@@ -1,4 +1,4 @@
-telegram_user_account: telegram-bot
+telegram_user_account: telegram_bot
 telegram_checkout_location: /home/{{ telegram_user_account }}/telegram-bot
 telegram_bot_virtual_env_location: /home/{{ telegram_user_account }}/telegram-virtual-env
 telegram_bot_repo: https://github.com/avinash-oza/telegram-bot.git
