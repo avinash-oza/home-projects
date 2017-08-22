@@ -1,9 +1,10 @@
-{{ telegram_checkout_location }}/telegram-bot.log {
+{{ telegram_log_location }}/telegram-bot.log {
     missingok
     copytruncate
     notifempty
     compress
     size 1M
     weekly
+    maxage 10
     create 0744 {{ telegram_user_account }} {{ telegram_user_account }}
 }

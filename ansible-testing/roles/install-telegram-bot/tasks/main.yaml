@@ -71,6 +71,15 @@
   template:
     src: telegram_log_rotate
     dest: "/etc/logrotate.d/telegram_log_rotate"
+
+- name: "Create logfile location {{ telegram_log_location }}"
+  become: yes
+  file:
+    path: "{{ telegram_log_location }}"
+    state: directory
+    owner: "{{ telegram_user_account }}"
+    group: "{{ telegram_user_account }}"
+    mode: 0755
   
 # name: Copy systemd file for starting telegram-bot on boot
 # become: yes
