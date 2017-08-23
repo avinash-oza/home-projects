@@ -1,0 +1,12 @@
+[Unit]
+Description= Garage Door Service
+
+[Service]
+Type=simple
+User= {{ garage_door_user }}
+Group= {{ garage_door_user }}
+WorkingDirectory=/home/{{garage_door_user }}/garage-door-server
+ExecStart=/home/{{ garage_door_user }}/virtual-env/bin/python garage_bottle_server.py
+
+[Install]
+WantedBy=multi-user.target
