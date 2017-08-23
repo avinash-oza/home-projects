@@ -1,10 +1,13 @@
 import time
 import datetime
 import json
+import ConfigParser
 
 from bottle import route, run, template, auth_basic
-
 import RPi.GPIO as GPIO
+
+config = ConfigParser.RawConfigParser()
+config.read('garage-door.config')
 
 
 # Pi specific constants relative to looking at the house
@@ -69,8 +72,13 @@ def control_garage(garage_name, action):
 
     return message, action_error
 
+
+# Bottle related logic
+
 def basic_auth_check(username, password):
-    return username == 'avi' and password == 'milo'
+    expected_username = config.get('auth', 'username')
+    expected_password = config.get('auth', 'password')
+    return username == expected_username and password == expected_password
 
 
 @route('/garage/status/<garage_name>')
