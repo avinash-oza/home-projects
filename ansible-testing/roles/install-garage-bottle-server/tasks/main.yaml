@@ -34,6 +34,7 @@
   git:
     repo: https://github.com/avinash-oza/garage-door-server.git
     dest: /home/{{ garage_door_user }}/garage-door-server
+    force: yes
 
 - name: Copy config and create config
   template:
@@ -42,6 +43,14 @@
     owner: "{{ garage_door_user }}"
     group: "{{ garage_door_user }}"
     mode: 0755
+
+- name: Change ownership of all files to user
+  file:
+    path: "/home/{{ garage_door_user }}"
+    owner: "{{ garage_door_user }}"
+    group: "{{ garage_door_user }}"
+    state: directory
+    recurse: yes
 
 - name: Copy systemd file for starting service on boot
   become: yes
@@ -54,5 +63,5 @@
   become: yes
   service:
     name: garage-door
-    state: started
+    state: restarted
     enabled: true
