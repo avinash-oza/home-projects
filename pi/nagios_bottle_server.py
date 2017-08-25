@@ -23,7 +23,7 @@ def do_login():
 
     line_to_write = '[{0}] {1}'.format(current_timestamp, ';'.join(['PROCESS_SERVICE_CHECK_RESULT', hostname, service_description, return_code, service_output]))
 
-    with open('/var/lib/nagios3/rw/nagios3.cmd', 'ba+') as f:
+    with open('/var/lib/nagios3/rw/nagios.cmd', 'a') as f:
         f.write(line_to_write)
 
     return line_to_write
