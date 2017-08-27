@@ -4,3 +4,4 @@ telegram_bot_virtual_env_location: /home/{{ telegram_user_account }}/telegram-vi
 telegram_bot_repo: https://github.com/avinash-oza/telegram-bot.git
 telegram_user_public_key_location: /tmp/telegram-bot-ssh.pub
 telegram_log_location: /var/log/custom-logs/telegram-bot
+telegram_alerts_endpoint: http://localhost:25001/send_nagios_alert
