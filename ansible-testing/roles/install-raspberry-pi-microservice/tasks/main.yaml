@@ -36,6 +36,18 @@
     dest: /home/{{ garage_door_user }}/raspberry-pi-microservices
     force: yes
 
+- name: Check if extra dependencies are needed based on repo
+  stat:
+    path: "/home/{{ garage_door_user }}/raspberry-pi-microservices/{{ microservice_name }}/requirements.txt"
+  register: additional_requirements_file
+
+- name: Install extra requirements
+  pip:
+    requirements: "{{ additional_requirements_file.stat.path }}"
+    virtualenv_python: python2.7
+    virtualenv: "/home/{{ garage_door_user }}/virtual-env"
+  when: additional_requirements_file.stat.exists == True
+
 - name: Copy config and create config for {{ microservice_name }}
   template:
     src: "configs/{{ microservice_name }}.config"
