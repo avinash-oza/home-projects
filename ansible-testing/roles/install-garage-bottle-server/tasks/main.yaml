@@ -32,14 +32,14 @@
 
 - name: Checkout garage-door-server
   git:
-    repo: https://github.com/avinash-oza/garage-door-server.git
-    dest: /home/{{ garage_door_user }}/garage-door-server
+    repo: https://github.com/avinash-oza/raspberry-pi-microservices.git
+    dest: /home/{{ garage_door_user }}/raspberry-pi-microservices
     force: yes
 
 - name: Copy config and create config
   template:
     src: garage-door.config
-    dest: "/home/{{ garage_door_user }}/garage-door-server/garage-door.config"
+    dest: "/home/{{ garage_door_user }}/raspberry-pi-microservices/garage_door/garage-door.config"
     owner: "{{ garage_door_user }}"
     group: "{{ garage_door_user }}"
     mode: 0755
