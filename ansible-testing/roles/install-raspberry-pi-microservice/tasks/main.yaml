@@ -4,7 +4,7 @@
     name: gpio
     state: present
 
-- name: Create garage-door user
+- name: Create microservices user {{ garage_door_user }}
   user:
     name: "{{ garage_door_user }}"
     groups: gpio # to allow access to sensors
@@ -30,16 +30,16 @@
     - bottle
     - Rpi.GPIO
 
-- name: Checkout garage-door-server
+- name: Checkout microservices directory
   git:
     repo: https://github.com/avinash-oza/raspberry-pi-microservices.git
     dest: /home/{{ garage_door_user }}/raspberry-pi-microservices
     force: yes
 
-- name: Copy config and create config
+- name: Copy config and create config for {{ microservice_name }}
   template:
-    src: garage-door.config
-    dest: "/home/{{ garage_door_user }}/raspberry-pi-microservices/garage_door/garage-door.config"
+    src: "configs/{{ microservice_name }}.config"
+    dest: "/home/{{ garage_door_user }}/raspberry-pi-microservices/{{ microservice_name }}/{{ microservice_name }}.config"
     owner: "{{ garage_door_user }}"
     group: "{{ garage_door_user }}"
     mode: 0755
@@ -55,13 +55,13 @@
 - name: Copy systemd file for starting service on boot
   become: yes
   template:
-    src: garage-door.service
-    dest: /etc/systemd/system
+    src: "template_bottle.service"
+    dest: "/etc/systemd/system/{{ microservice_name }}.service"
     mode: 0644
 
 - name: Enable service to run on boot and start
   become: yes
   service:
-    name: garage-door
+    name: "{{ microservice_name }}"
     state: restarted
     enabled: true
