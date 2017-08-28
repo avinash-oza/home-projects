@@ -62,6 +62,6 @@
 - name: Enable service to run on boot and start
   become: yes
   service:
-    name: "{{ microservice_name }}"
+    name: "{{ microservice_name }}.service"
     state: restarted
     enabled: true
