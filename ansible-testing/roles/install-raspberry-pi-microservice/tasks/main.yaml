@@ -16,7 +16,6 @@
   apt: pkg={{item}}  state=installed update_cache=true
   with_items:
     - git
-#   - virtualenv
     - python-pip
     - python-virtualenv
     - python-dev
@@ -48,6 +47,22 @@
     virtualenv: "/home/{{ garage_door_user }}/virtual-env"
   when: additional_requirements_file.stat.exists == True
 
+# Determine whether there is a system specific config file to copy or not
+- name: Check for system specifc config file
+  delegate_to: 127.0.0.1
+  stat:
+    path: "{{ role_path }}/templates/configs/{{ microservice_name}}_{{ ansible_hostname }}.config"
+  register: system_specific_config_file
+
+- name: Copy system specific config file for {{ microservice_name }}
+  template:
+    src: "{{ system_specific_config_file.stat.path }}"
+    dest: "/home/{{ garage_door_user }}/raspberry-pi-microservices/{{ microservice_name }}/{{ microservice_name }}.config"
+    owner: "{{ garage_door_user }}"
+    group: "{{ garage_door_user }}"
+    mode: 0755
+  when: system_specific_config_file.stat.exists == True
+
 - name: Copy config and create config for {{ microservice_name }}
   template:
     src: "configs/{{ microservice_name }}.config"
@@ -55,6 +70,8 @@
     owner: "{{ garage_door_user }}"
     group: "{{ garage_door_user }}"
     mode: 0755
+  when: system_specific_config_file.stat.exists == False
+##########################################################################
 
 - name: Change ownership of all files to user
   file:
