@@ -31,6 +31,22 @@
     virtualenv_python: python2.7
     virtualenv: "{{ telegram_bot_virtual_env_location }}"
 
+- name: Create telegram-bot alerts env
+  pip:
+    name: "{{ item }}"
+    virtualenv_python: python2.7
+    virtualenv: "/home/{{ telegram_user_account }}/service-virtual-env"
+  with_items:
+    - bottle
+
+- name: Create telegram-bot alerts env mysql-connector
+  pip:
+    name: mysql-connector
+    version: 2.1.4
+    virtualenv_python: python2.7
+    virtualenv: "/home/{{ telegram_user_account }}/service-virtual-env"
+
+
 - name: Create telegram-bot start file
 # become: yes
 # become_user: "{{ telegram_user_account }}"
@@ -75,16 +91,16 @@
     group: "{{ telegram_user_account }}"
     mode: 0755
   
-# name: Copy systemd file for starting telegram-bot on boot
-# become: yes
-# template:
-#   src: telegram-bot.service
-#   dest: /etc/systemd/system
-#   mode: 0644
+- name: Copy systemd file for starting telegram-bot on boot
+  become: yes
+  template:
+    src: telegram-bot.service
+    dest: /etc/systemd/system
+    mode: 0644
 
-# name: Enable telegram-bot to run on boot and start
-# become: yes
-# service:
-#   name: telegram-bot
-#   state: started
-#   enabled: true
+- name: Enable telegram-bot to run on boot and start
+  become: yes
+  service:
+    name: telegram-bot.service
+    state: restarted
+    enabled: true

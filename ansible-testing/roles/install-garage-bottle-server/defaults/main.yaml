@@ -1,5 +1,0 @@
-garage_door_user: garage-door
-garage_door_port: 25678
-garage_door_virtual_env: /home/{{ garage_door_user }}/garage-door-virtualenv
-garage_door_repo: https://github.com/avinash-oza/home-projects.git
-

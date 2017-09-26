@@ -1,1 +1,1 @@
-sudo_user_to_configure: deployment_user
+sudo_user_to_configure: deploy
