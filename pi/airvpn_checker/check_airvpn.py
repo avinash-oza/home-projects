@@ -19,9 +19,13 @@ except:
     output_text= "Error while accessing API"
     exit_code = "2"
 else:
-    if(len(result['sessions']) < 2):
+    num_sessions = 0
+    if 'sessions' in result:
+        num_sessions = len(result['sessions'])
+
+    if num_sessions < 2:
         exit_code = "2"
-    output_text = "Number of sessions: {0} {1}".format(len(result['sessions']), "less than 2" if len(result['sessions']) < 2 else "")
+    output_text = "Number of sessions: {0} {1}".format(num_sessions, "less than 2" if num_sessions < 2 else "")
 
 passive_check_result = [dict(hostname='monitoring-station',service_description='AirVPN Status', return_code=exit_code,plugin_output=output_text)]
 
