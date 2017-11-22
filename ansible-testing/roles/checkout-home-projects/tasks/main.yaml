@@ -2,11 +2,18 @@
   shell: cat /home/{{ user_to_configure}}/.ssh/id_rsa.pub
   register: ssh_pub_key
 
-- name: Add key to github
-  github_key:
+- name: Add deploy key
+  github_deploy_key:
+    owner: "avinash-oza"
     name: "{{ user_to_configure }} @ {{ ansible_hostname }}"
-    token: "{{ github_api_key }}"
-    pubkey: "{{ ssh_pub_key.stdout }}"
+    repo: "home-projects"
+    key:  "{{ ssh_pub_key.stdout }}"
+    token: XXX
+# name: Add key to github
+# github_key:
+#   name: "{{ user_to_configure }} @ {{ ansible_hostname }}"
+#   token: "{{ github_api_key }}"
+#   pubkey: "{{ ssh_pub_key.stdout }}"
 
 - name: Clone home-projects repo
   git:
