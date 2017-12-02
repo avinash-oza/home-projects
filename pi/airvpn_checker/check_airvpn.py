@@ -25,7 +25,8 @@ else:
 
     if num_sessions < 2:
         exit_code = "2"
-    output_text = "Number of sessions: {0} {1}".format(num_sessions, "less than 2" if num_sessions < 2 else "")
+    vpn_ips = '|'.join(','.join([s['vpn_ip'], s['server_location'], s['connected_since_date']]) for s in result['sessions'])
+    output_text = "Number of sessions: {0} {1}...{2}".format(num_sessions, "less than 2" if num_sessions < 2 else "", vpn_ips)
 
 passive_check_result = [dict(hostname='monitoring-station',service_description='AirVPN Status', return_code=exit_code,plugin_output=output_text)]
 
