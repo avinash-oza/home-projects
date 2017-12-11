@@ -1,4 +1,12 @@
 ---
+- name: "Check for required parameters"
+  fail: 
+    msg="Variable '{{ item }}' is not defined"
+  when: item not in hostvars[inventory_hostname]
+  with_items:
+    - microservice_port
+    - microservice_name
+
 - name: Check the gpio group exists or create
   group:
     name: gpio
