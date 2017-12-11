@@ -7,6 +7,13 @@
     - microservice_port
     - microservice_name
 
+- name: "Check for nagios_passive_server"
+  fail: 
+    msg="Attempting to install nagios_passive_server not as user nagios"
+  when: 
+    - microservice_name == 'nagios_passive_check'
+    - garage_door_user != 'nagios'
+
 - name: Check the gpio group exists or create
   group:
     name: gpio
