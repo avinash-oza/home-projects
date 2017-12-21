@@ -8,7 +8,7 @@
     name: "{{ user_to_configure }} @ {{ ansible_hostname }}"
     repo: "home-projects"
     key:  "{{ ssh_pub_key.stdout }}"
-    token: XXX
+    token: "{{ github_api_key }}"
 # name: Add key to github
 # github_key:
 #   name: "{{ user_to_configure }} @ {{ ansible_hostname }}"
