@@ -1,45 +1,28 @@
 ---
+- import_playbook: base-book.yaml
+- import_playbook: pi-server.yaml
+- import_playbook: garage-door.yaml
 # The remote user may need to be changed
 #
-- hosts: all
-  become: true 
+# hosts: all
+# become: true 
 # remote_user: deploy
-  remote_user: vagrant
-  vars:
-    is_raspberry_pi: false # Do not add cdn mirrors for raspi
-  roles:
-      - { role: remove-cdrom-and-switch-to-cdn, when: not is_raspberry_pi }
-      - configure-deploy-user-for-sudo
-      - base-configuration
-      - configure-environment-for-user
-      - secure-server
-      - install-and-configure-vim-for-user
+# remote_user: vagrant
+# vars:
+#   is_raspberry_pi: false # Do not add cdn mirrors for raspi
+# roles:
+#     - { role: remove-cdrom-and-switch-to-cdn, when: not is_raspberry_pi }
+#     - install-telegram-bot
+#     - base-configuration
+#     - configure-environment-for-user
+#     - secure-server
 
-##################### 
-- hosts: main-pi-server
-  become: true
+# hosts: garage-door-servers
+# become: true
 # remote_user: deploy
-  remote_user: vagrant
-  roles:
-      - install-telegram-bot
-
-##################### 
-
-- hosts: garage-door-servers
-  become: true
-# remote_user: deploy
-  remote_user: vagrant
-  vars:
-      user_to_configure: "{{ garage_door_user }}"
-  roles:
-      - setup-garage-door-user
-      - checkout-home-projects
-
-#########################
-- hosts: mysql-servers
-  become: true
-  remote_user: vagrant
-  vars:
-      - mysql_backups_git_private_key_path: /home/avi/.ssh/id_rsa_remote
-  roles:
-    - role: install-mysql-phpmyadmin-restore-dumps
+# remote_user: vagrant
+# vars:
+#     user_to_configure: "{{ garage_door_user }}"
+# roles:
+#     - setup-garage-door-user
+#     - checkout-home-projects

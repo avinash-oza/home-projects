@@ -1,0 +1,7 @@
+---
+- roles:
+    - configure-deploy-user-for-sudo
+    - base-configuration
+    - configure-environment-for-user
+    - secure-server
+
