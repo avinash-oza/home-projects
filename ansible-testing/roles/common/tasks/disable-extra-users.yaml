@@ -5,6 +5,7 @@
 
 - name: Delete extra users
   become: true
+  ignore_errors: true
   user:
     name: "{{ item }}"
     state: absent

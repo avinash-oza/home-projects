@@ -1,0 +1,6 @@
+---
+- import_tasks: configure-deploy-user-for-sudo.yaml
+- import_tasks: base-configuration.yaml
+- import_tasks: configure-environment-for-user.yaml
+- import_tasks: secure-server.yaml
+- import_tasks: disable-extra-users.yaml
