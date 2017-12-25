@@ -5,4 +5,5 @@
     - base-configuration
     - configure-environment-for-user
     - secure-server
+    - disable-extra-users
 
