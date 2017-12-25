@@ -1,5 +1,5 @@
-[main-pi-server]
+[pi-server]
 172.16.2.100
 
-[garage-door-servers]
+[garage-door]
 172.16.2.102
