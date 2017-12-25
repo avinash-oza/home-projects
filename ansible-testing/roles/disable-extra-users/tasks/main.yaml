@@ -1,4 +1,8 @@
 ---
+- name: Register current users
+  getent:
+      database: passwd
+
 - name: Delete extra users
   become: true
   user:
@@ -9,14 +13,4 @@
     - pi
     - avi
     - vagrant
-
-# name: Delete old home directories
-# become: true
-# become_user: "{{ sudo_user_to_configure }}"
-# file:
-#   state: absent
-#   path: "/home/{{ item }}/"
-# with_items:
-#   - pi
-#   - avi
-#   - vagrant
+  when: item in getent_passwd
