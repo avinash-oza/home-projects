@@ -1,0 +1,11 @@
+github_api_key: "{{ vault_github_api_key }}"
+sudo_user_to_configure: deploy
+user_to_configure: "{{ sudo_user_to_configure }}"
+telegram_user_public_key_location: /tmp/telegram-bot-ssh.pub
+mysql_server_ip: "{{ vault_mysql_server_ip }}"
+telegram_user_account: telegram_bot
+telegram_api_key: "{{ vault_telegram_api_key }}"
+telegram_ups_ip: 172.16.1.10
+telegram_admin_id: "{{ vault_telegram_admin_id }}"
+garage_door_port: 25678
+
