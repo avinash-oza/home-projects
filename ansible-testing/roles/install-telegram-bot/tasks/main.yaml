@@ -35,7 +35,7 @@
   pip:
     name: "{{ item }}"
     virtualenv_python: python2.7
-    virtualenv: "/home/{{ telegram_user_account }}/service-virtual-env"
+    virtualenv: "{{ telegram_bot_virtual_env_location }}"
   with_items:
     - bottle
 
@@ -44,8 +44,7 @@
     name: mysql-connector
     version: 2.1.4
     virtualenv_python: python2.7
-    virtualenv: "/home/{{ telegram_user_account }}/service-virtual-env"
-
+    virtualenv: "{{ telegram_bot_virtual_env_location }}"
 
 - name: Create telegram-bot start file
 # become: yes
