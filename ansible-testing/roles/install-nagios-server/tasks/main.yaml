@@ -6,29 +6,27 @@
     - nagios-plugins-contrib
     - nagios-nrpe-plugin
 
-- name: Symlink case temperature plugin with nagios plugins
-  file:
-    src: "/home/{{ user_to_configure }}/home-projects/pi"
-    dest: /usr/lib/nagios/plugins/case_temperature
-    state: link
-    owner: root
-    group: root
-
-### UNTESTED. Add seciton for changing config
 - name: Symlink airvpn_checker plugin with nagios plugins
   file:
-    src: "/home/{{ user_to_configure }}/home-projects/pi/airvpn_checker"
+    src: "{{ user_home_directory }}/home-projects/pi/airvpn_checker"
     dest: /usr/lib/nagios/plugins/check_airvpn_status
     state: link
     owner: root
     group: root
+
+- name: copy airvpn config
+  template:
+    src: airvpn_checker.config.j2
+    dest: "{{ user_home_directory }}/home-projects/pi/airvpn_checker/airvpn.config"
+    owner: "nagios"
+    group: "nagios"
 
 - name: Allow nagios user sudo access for plugins
   lineinfile:
     dest: /etc/sudoers
     state: present
     regexp: '^nagios'
-    line: "nagios ALL=(ALL) NOPASSWD:/usr/lib/nagios/plugins/,/home/pi/home-projects/pi,/usr/local/bin/Adafruit_DHT/"
+    line: "nagios ALL=(ALL) NOPASSWD:/usr/lib/nagios/plugins/,{{ user_home_directory }}/home-projects/pi"
     validate: 'visudo -cf %s'
 
 - name: Generate ssh key for nagios user
@@ -39,7 +37,7 @@
 
 - name: Fetch public key to local machine
   fetch:
-    src: /var/lib/nagios/.ssh/id_rsa.pub
+    src: "{{ user_home_directory}}/.ssh/id_rsa.pub"
     dest: "{{ playbook_dir }}/nagios_pub_key.pub"
     fail_on_missing: yes
     flat: yes

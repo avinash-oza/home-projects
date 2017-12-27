@@ -1,5 +1,11 @@
+- name: "Generate ssh key for {{ user_to_configure }}"
+  user:
+    name: "{{ user_to_configure }}"
+    generate_ssh_key: yes
+    ssh_key_comment: "{{ user_to_configure}}@{{ ansible_hostname }}"
+
 - name: Register user pub key
-  shell: cat /home/{{ user_to_configure}}/.ssh/id_rsa.pub
+  shell: "cat {{ user_home_directory }}/.ssh/id_rsa.pub"
   register: ssh_pub_key
 
 - name: Add deploy key
@@ -18,13 +24,14 @@
 - name: Clone home-projects repo
   git:
     repo: "{{ home_projects_repo }}"
-    dest: "/home/{{ user_to_configure }}/home-projects"
+    dest: "{{ user_home_directory}}/home-projects"
+    force: yes
     accept_hostkey: yes
-    key_file: "/home/{{ user_to_configure }}/.ssh/id_rsa"
+    key_file: "{{ user_home_directory }}/.ssh/id_rsa"
 
 - name: Convert ownership of repo to user
   file:
-    path: "/home/{{ user_to_configure }}/home-projects"
+    path: "{{ user_home_directory }}/home-projects"
     owner: "{{ user_to_configure }}"
     group: "{{ user_to_configure }}"
     state: directory

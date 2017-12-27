@@ -1,1 +1,2 @@
 home_projects_repo: git@github.com:avinash-oza/home-projects.git
+user_home_directory: "/home/{{ user_to_configure }}"
