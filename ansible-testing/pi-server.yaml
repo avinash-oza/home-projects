@@ -3,7 +3,10 @@
   remote_user: deploy
   become: true
   roles:
+    - { role: common, tags: ['base'] }
     - { role: install-telegram-bot, tags: ['telegram'] }
     - { role: install-raspberry-pi-microservice, microservice_name: nagios_alerts, microservice_port: 25001, tags: ['services']}
     - { role: install-raspberry-pi-microservice, microservice_name: nagios_passive_check, microservice_port: 25003, garage_door_user: nagios, tags: ['services']}
     - { role: install-raspberry-pi-microservice, microservice_name: temperature_sensors, microservice_port: 25002, tags: ['services']}
+    - { role: checkout-home-projects, user_to_configure: nagios, user_home_directory: "/var/lib/nagios", tags: ['nagios']}
+    - { role: install-nagios-server, user_home_directory: "/var/lib/nagios", tags: ['nagios']}

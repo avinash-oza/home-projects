@@ -1,5 +1,11 @@
 [pi-server]
 172.16.2.100
 
+[nagios-server]
+172.16.2.100
+
 [garage-door]
 172.16.2.102
+
+[main-server]
+172.16.1.10

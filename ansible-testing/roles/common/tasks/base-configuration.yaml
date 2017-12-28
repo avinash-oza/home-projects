@@ -6,3 +6,11 @@
   with_items:
     - git
     - ntp
+
+- name: Set machine time to EST
+  file:
+    src: /usr/share/zoneinfo/America/New_York
+    dest: /etc/localtime
+    state: link
+    owner: root
+    group: root
