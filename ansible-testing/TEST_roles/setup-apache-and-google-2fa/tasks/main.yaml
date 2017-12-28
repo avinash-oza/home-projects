@@ -1,0 +1,40 @@
+---
+- name: install apache2 and apache2-dev
+  apt: pkg={{item}}  state=installed update_cache=true cache_valid_time=3600
+  with_items:
+    - apache2
+    - apache2-dev
+
+- name: install unzip for google2fa
+  apt: pkg=unzip  state=installed update_cache=true cache_valid_time=3600
+
+- name: Download google2fa package
+  get_url:
+    url: "{{ google_2fa_package_url }}"
+    dest: /tmp/source_archive.zip
+
+- name: Extract google2fa package
+  unarchive:
+    src: /tmp/source_archive.zip
+    dest: /tmp
+    remote_src: yes
+
+- name: Compile google2fa
+  command: make
+  args:
+    chdir: /tmp/google-authenticator-apache-module/trunk
+    creates: /tmp/google-authenticator-apache-module/trunk/.libs/mod_authn_google.so
+
+- name: Copy compiled module to apache directory
+  become: true
+  copy:
+    src: /tmp/google-authenticator-apache-module/trunk/.libs/mod_authn_google.so
+    dest: /etc/apache2/mods-enabled
+    remote_src: true
+
+- name: Enable ssl and proxy module for apache
+  become: true
+  command: "a2enmod {{ item }}"
+  with_items:
+    - proxy
+    - ssl
