@@ -26,17 +26,12 @@
 - name: add to sudo group
   user: name="{{ sudo_user_to_configure }}" groups=sudo append=yes state=present createhome=no
 
-- name: Add ssh key for deploy user
+- name: Add authorized keys for SSH deploy user
   authorized_key:
     user: "{{ sudo_user_to_configure }}"
     state: present
-    key: "{{ lookup('file', 'id_rsa.pub') }}"
-
-- name: Remove ssh key for deploy user
-  authorized_key:
-    user: "{{ sudo_user_to_configure }}"
-    state: absent
-    key: "{{ lookup('file', 'id_rsa_remove.pub') }}"
-
-
+#   key: "{{ lookup('file', 'id_rsa.pub') }}"
+    key: "{{ item }}"
+  with_file:
+    - id_rsa.pub
 
