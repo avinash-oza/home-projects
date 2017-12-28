@@ -5,6 +5,16 @@
     - apache2
     - apache2-dev
 
+- name: Disable listening on port 80
+  lineinfile:
+    backup: true
+    dest: /etc/apache2/ports.conf
+    state: absent
+    regexp: "{{ item }}"
+  with_items:
+    - "^NameVirtualHost"
+    - "Listen 80"
+
 - name: install unzip for google2fa
   apt: pkg=unzip  state=installed update_cache=true cache_valid_time=3600
 
