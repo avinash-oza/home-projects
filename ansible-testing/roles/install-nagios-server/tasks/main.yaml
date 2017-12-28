@@ -6,6 +6,15 @@
     - nagios-plugins-contrib
     - nagios-nrpe-plugin
 
+- name: Enable nagios external commands
+  lineinfile:
+    backup: true
+    dest: /etc/nagios3/nagios.cfg
+    state: present
+    regexp: '^check_external_commands'
+    line: "check_external_commands=1"
+
+
 - name: Symlink airvpn_checker plugin with nagios plugins
   file:
     src: "{{ user_home_directory }}/home-projects/pi/airvpn_checker"
@@ -21,6 +30,14 @@
     owner: "nagios"
     group: "nagios"
 
+- name: copy over nagios configs
+  template:
+    backup: true
+    src: "{{ item }}"
+    dest: "/etc/nagios3/conf.d/{{ item | basename | regex_replace('\\.j2', '') }}"
+  with_fileglob:
+    - ../templates/conf.d/*
+
 - name: Allow nagios user sudo access for plugins
   lineinfile:
     dest: /etc/sudoers
@@ -28,6 +45,11 @@
     regexp: '^nagios'
     line: "nagios ALL=(ALL) NOPASSWD:/usr/lib/nagios/plugins/,{{ user_home_directory }}/home-projects/pi"
     validate: 'visudo -cf %s'
+
+- name: Restart nagios server
+  service:
+    name: nagios3
+    state: restarted
 
 - name: Generate ssh key for nagios user
   user:
@@ -41,3 +63,5 @@
     dest: "{{ playbook_dir }}/nagios_pub_key.pub"
     fail_on_missing: yes
     flat: yes
+
+#TODO: handle copying over apache configs
