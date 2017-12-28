@@ -1,0 +1,9 @@
+
+---
+- hosts: main-server
+  remote_user: deploy
+  become: true
+  roles:
+    - common
+    - setup-nagios-monitoring
+
