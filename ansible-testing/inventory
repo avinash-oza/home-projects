@@ -1,2 +1,0 @@
-[main-pi-server]
-my-b1 ansible_ssh_host=b1
