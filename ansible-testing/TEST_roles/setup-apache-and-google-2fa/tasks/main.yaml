@@ -18,22 +18,30 @@
 - name: install unzip for google2fa
   apt: pkg=unzip  state=installed update_cache=true cache_valid_time=3600
 
+- name: Check for google2fa module
+  stat:
+    path: /etc/apache2/mods-enabled/mod_authn_google.so
+  register: google2fa_module
+
 - name: Download google2fa package
   get_url:
     url: "{{ google_2fa_package_url }}"
     dest: /tmp/source_archive.zip
+  when: google2fa_module.stat.exists == False
 
 - name: Extract google2fa package
   unarchive:
     src: /tmp/source_archive.zip
     dest: /tmp
     remote_src: yes
+  when: google2fa_module.stat.exists == False
 
 - name: Compile google2fa
   command: make
   args:
     chdir: /tmp/google-authenticator-apache-module/trunk
     creates: /tmp/google-authenticator-apache-module/trunk/.libs/mod_authn_google.so
+  when: google2fa_module.stat.exists == False
 
 - name: Copy compiled module to apache directory
   become: true
@@ -41,6 +49,7 @@
     src: /tmp/google-authenticator-apache-module/trunk/.libs/mod_authn_google.so
     dest: /etc/apache2/mods-enabled
     remote_src: true
+  when: google2fa_module.stat.exists == False
 
 - name: Enable ssl and proxy module for apache
   become: true
@@ -49,3 +58,23 @@
     - proxy
     - ssl
     - proxy_http
+
+- name: Copy default SSL site
+  become: true
+  template:
+    backup: true
+    src: main-ssl-host.conf.j2
+    dest: /etc/apache2/sites-available/main-ssl-host.conf
+    owner: root
+    group: root
+
+- name: Enable default SSL site
+  become: true
+  command: "a2ensite {{ item }}"
+  with_items:
+    - main-ssl-host
+
+- name: Restart apache2
+  service:
+    name: apache2
+    state: restarted

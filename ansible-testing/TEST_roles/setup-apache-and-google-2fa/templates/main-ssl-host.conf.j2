@@ -1,0 +1,28 @@
+Loadmodule authn_google_module mods-enabled/mod_authn_google.so
+<VirtualHost *:443>
+	SSLEngine on
+        
+        #### FOR TESTING ONLY ###
+#       SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
+#       SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+        #########################
+
+	SSLCertificateFile /etc/letsencrypt/live/{{ local_domain_name }}/cert.pem
+	SSLCertificateKeyFile /etc/letsencrypt/live/{{ local_domain_name }}/privkey.pem
+	SSLCertificateChainFile /etc/letsencrypt/live/{{ local_domain_name }}/chain.pem
+
+	<Location />
+		SSLRequireSSL
+		Options ExecCGI
+		AllowOverride None
+		Order allow,deny
+		Allow from all
+		AuthName "Server Access"
+		AuthType Basic
+		AuthBasicProvider "google_authenticator"
+		GoogleAuthUserPath ga_auth
+		GoogleAuthCookieLife 36000
+		GoogleAuthEntryWindow 2
+		Require valid-user
+	</Location>
+</VirtualHost>
