@@ -1,5 +1,7 @@
 ---
-- hosts: all
+- hosts: garage-door
+  remote_user: deploy
+  become: true
   roles:
-    - setup-garage-door-user
-    - checkout-home-projects
+    - { role: common, tags: ['base'] }
+    - { role: install-raspberry-pi-microservice, microservice_name: temperature_sensors, microservice_port: 25002, tags: ['services']}
