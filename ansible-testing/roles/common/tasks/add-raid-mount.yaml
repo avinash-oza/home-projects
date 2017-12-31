@@ -9,7 +9,7 @@
   become: true
   mount:
     name: /mnt/raid0
-    src: "{{ raid_mount_ip_address }}":/mnt/raid0
+    src: "{{ raid_mount_ip_address }}:/mnt/raid0"
     fstype: nfs
     opts: nolock
     state: present
