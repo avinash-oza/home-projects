@@ -1,0 +1,19 @@
+# runs only when raid_mount_ip_address is defined
+- name: "Make mount point /mnt/raid0"
+  become: true
+  file:
+    path: "/mnt/raid0"
+    state: directory
+
+- name: "Create raid mount in fstab"
+  become: true
+  mount:
+    name: /mnt/raid0
+    src: "{{ raid_mount_ip_address }}":/mnt/raid0
+    fstype: nfs
+    opts: nolock
+    state: present
+
+- name: "Mount all partitions (should do only wheen fstab was changed)"
+  become: true
+  command: mount -a
