@@ -6,6 +6,17 @@
     - vim
     - git
     - stow
+  when: ansible_distribution == "Debian" # freepbx is centos
+
+- name: install vim Yum
+  yum: pkg={{item}}  state=installed update_cache=true
+  become: true
+  with_items:
+    - vim
+    - git
+    - stow
+  when: ansible_distribution != "Debian" # freepbx is centos
+
 
 # Configure vim with plugins and dotfiles
 - name: checkout dotfiles
