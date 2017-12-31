@@ -6,6 +6,7 @@
   roles:
     - common
     - setup-nagios-monitoring
+    - { role: deploy-docker-container, docker_compose_file: rabbitmq.yaml, docker_project_name: rabbitmq, tags: ['docker'] }
     - { role: deploy-docker-container, docker_compose_file: gogs-compose.yaml, docker_project_name: gogs-server, tags: ['docker'] }
     - { role: deploy-docker-container, docker_compose_file: mysql-phpmyadmin.yaml, docker_project_name: mysql-phpmyadmin, tags: ['docker'] }
 
