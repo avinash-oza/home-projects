@@ -1,7 +1,12 @@
 ---
 # configure sudo for other operations
+- name: debug
+  debug:
+    var: ansible_distribution
+
 - name: install sudo
   apt: pkg=sudo  state=installed update_cache=true
+  when: ansible_distribution == "Debian" # freepbx is centos
 
 - name: Check for sudo group
   group:
@@ -34,4 +39,5 @@
     key: "{{ item }}"
   with_file:
     - id_rsa.pub
+    - id_rsa_dev.pub
 
