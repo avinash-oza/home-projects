@@ -1,2 +1,1 @@
 google_2fa_package_url: https://storage.googleapis.com/google-code-archive-source/v2/code.google.com/google-authenticator-apache-module/source-archive.zip
-local_domain_name: "{{ vault_local_domain_name }}"

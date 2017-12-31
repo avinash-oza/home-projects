@@ -9,3 +9,4 @@ telegram_ups_ip: 172.16.1.10
 telegram_admin_id: "{{ vault_telegram_admin_id }}"
 garage_door_port: 25678
 
+local_domain_name: "{{ vault_local_domain_name }}"

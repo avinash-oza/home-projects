@@ -1,0 +1,33 @@
+version: '2'
+services:
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        links:
+            - "db:db"
+        environment:
+            PMA_USER: root
+            PMA_PASSWORD: "{{ mysql_root_password }}"
+            PMA_ABSOLUTE_URI: "https://{{ local_domain_name }}/phpmyadmin"
+        ports:
+            # Puts on 8080
+            - "8080:80"
+        networks:
+            - mysql_network
+    db:
+        image: mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
+        ports:
+            - "3306:3306"
+        volumes:
+            - "{{ docker_volumes_path }}/mysql_server_data:/var/lib/mysql"
+        networks:
+            - mysql_network
+
+volumes:
+    db:
+        driver: local
+
+networks:
+    mysql_network: 
+        driver: bridge

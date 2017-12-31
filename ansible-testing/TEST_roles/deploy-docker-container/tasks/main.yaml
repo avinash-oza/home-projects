@@ -1,0 +1,10 @@
+- name: "Copy over {{ docker_compose_file }}"
+  template:
+    src: "{{ docker_compose_file }}"
+    dest: /tmp/docker-compose.yaml
+
+- name: "Deploy {{ docker_project_name }}"
+  docker_service:
+    project_name: "{{ docker_project_name }}"
+    state: present
+    project_src: /tmp
