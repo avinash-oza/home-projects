@@ -6,6 +6,7 @@
 # with_items:
 #   - microservice_port
 #   - microservice_name
+
 - debug:
     var: microservice_name
 
@@ -100,3 +101,24 @@
     name: "{{ microservice_name }}.service"
     state: restarted
     enabled: true
+
+- name: Load any required cron job
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ microservice_name }}.yaml"
+    - "default.yaml"
+
+- debug:
+    var: cron_job
+
+
+- name: Install cron job
+  #TODO: Fix the user for become
+  cron:
+    name: "{{ microservice_name }}_job"
+    backup: true
+    minute: "*/2"
+    job: "{{ cron_job }}"
+    state: present
+    user: deploy
+  when: cron_job is defined

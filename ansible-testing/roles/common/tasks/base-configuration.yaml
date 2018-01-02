@@ -6,6 +6,7 @@
   with_items:
     - git
     - ntp
+    - curl
   when: ansible_distribution == "Debian" # freepbx is centos
 
 - name: Set machine time to EST
