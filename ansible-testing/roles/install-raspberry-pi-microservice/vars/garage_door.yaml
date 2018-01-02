@@ -1,0 +1,1 @@
+cron_job: '/usr/bin/curl -s -X GET http://localhost:25678/garage/status/all | /usr/bin/curl -X POST -H "Content-Type: application/json" -d @- http://172.16.2.100:25003/submit_check'
