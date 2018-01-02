@@ -5,3 +5,4 @@
   roles:
     - { role: common, tags: ['base'] }
     - { role: install-raspberry-pi-microservice, microservice_name: temperature_sensors, microservice_port: 25002, tags: ['services']}
+    - { role: install-raspberry-pi-microservice, microservice_name: garage_door, microservice_port: 25678, tags: ['services']}
