@@ -1,5 +1,5 @@
 # runs only when raid_mount_ip_address is defined
-- name: Install required packages Debian
+- name: Install required packages CENTOS
   yum:
     name: "{{ item }}"
     state: present
@@ -7,7 +7,7 @@
     - nfs-utils
   when: ansible_distribution != "Debian" # freepbx is centos
 
-- name: Install required packages CENTOS
+- name: Install required packages Debian
   apt:
     name: "{{ item }}"
     state: present
