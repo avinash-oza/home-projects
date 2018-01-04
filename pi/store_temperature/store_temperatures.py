@@ -21,7 +21,6 @@ db_user_name = config.get('DATABASE', 'user')
 db_password = config.get('DATABASE', 'password')
 db_name = config.get('DATABASE', 'database')
 db_connection = mysql.connector.connect(user=db_user_name,password=db_password,host=db_host, database=db_name)
-db_connection.autocommit = True
 
 def print_message(ch, method, properties, body):
     try:
@@ -36,7 +35,9 @@ def print_message(ch, method, properties, body):
             query = "INSERT INTO temperature.temperatures(sensor_name, sensor_value, reading_time) VALUES (%(sensor_name)s, %(raw_value)s, %(formatted_time)s)"
             cursor.execute(query, one_entry)
 
-        print("Inserted entry")
+    finally:
+            db_connection.commit()
+    print("Inserted entry")
 
 channel.basic_consume(print_message, queue='temperatures_mysql', no_ack=True)
 
