@@ -10,4 +10,6 @@
     - { role: install-raspberry-pi-microservice, microservice_name: temperature_sensors, microservice_port: 25002, tags: ['services']}
     - { role: checkout-home-projects, user_to_configure: nagios, user_home_directory: "/var/lib/nagios", tags: ['nagios', 'home-projects']}
     - { role: install-nagios-server, user_home_directory: "/var/lib/nagios", tags: ['nagios', 'install-nagios']}
-#   - { role: setup-apache-and-google-2fa , tags: ['apache']} # Currently testing
+    - { role: setup-apache-and-google-2fa , tags: ['apache']} # Currently testing
+    - { role: checkout-home-projects, user_to_configure: deploy, tags: ['store-temperature', 'home-projects']}
+    - { role: install-rabbitmq-temperatures, garage_door_user: deploy, tags: ['store-temperature', 'home-projects']}
