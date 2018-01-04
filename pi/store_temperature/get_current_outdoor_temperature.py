@@ -32,6 +32,4 @@ data_dict = dict(sensor_name="OUTDOOR",
                  raw_value=data['currently']['temperature'],
                  status_time=datetime.datetime.now().strftime('%Y-%m-%d %I:%M:%S%p'),
                  current_temperature=True)
-print(data_dict)
-
-channel.basic_publish(exchange='temperatures', routing_key='', body=json.dumps(data_dict))
+channel.basic_publish(exchange='temperatures', routing_key='', body=json.dumps([data_dict]))
