@@ -27,7 +27,7 @@ db_connection = mysql.connector.connect(user=db_user_name,password=db_password,h
 
 def print_message(ch, method, properties, body):
     try:
-        entries = json.loads(body)
+        entries = json.loads(body.decode())
     except:
         logger.exception("Exception while parsing queue data:", body)
     else:
