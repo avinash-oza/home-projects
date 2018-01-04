@@ -4,6 +4,9 @@ import json
 import mysql.connector
 import configparser
 import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 config = configparser.ConfigParser()
 config.read('store_temperature.config')
@@ -26,18 +29,18 @@ def print_message(ch, method, properties, body):
     try:
         entries = json.loads(body)
     except:
-        print("Exception while parsing queue data:", body)
+        logger.exception("Exception while parsing queue data:", body)
     else:
         cursor = db_connection.cursor()
+        logger.info(entries)
         for one_entry in entries:
             one_entry['formatted_time'] = datetime.datetime.strptime(one_entry['status_time'], "%Y-%m-%d %I:%M:%S%p")
 
             query = "INSERT INTO temperature.temperatures(sensor_name, sensor_value, reading_time) VALUES (%(sensor_name)s, %(raw_value)s, %(formatted_time)s)"
             cursor.execute(query, one_entry)
-
-    finally:
             db_connection.commit()
-    print("Inserted entry")
+            logger.info("Inserted entry")
+
 
 channel.basic_consume(print_message, queue='temperatures_mysql', no_ack=True)
 
