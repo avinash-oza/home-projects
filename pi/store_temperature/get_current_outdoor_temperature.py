@@ -29,8 +29,8 @@ url = "https://api.darksky.net/forecast/{0}/{1}?exclude=minutely,hourly,daily,al
 data = requests.get(url).json()
 
 data_dict = dict(sensor_name="OUTDOOR",
-                 sensor_value=data['currently']['temperature'],
-                 reading_time=datetime.datetime.now().strftime('%Y-%m-%d %I:%M:%S%p'),
+                 raw_value=data['currently']['temperature'],
+                 status_time=datetime.datetime.now().strftime('%Y-%m-%d %I:%M:%S%p'),
                  current_temperature=True)
 print(data_dict)
 
