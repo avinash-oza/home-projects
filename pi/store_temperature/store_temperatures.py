@@ -9,7 +9,7 @@ config = configparser.ConfigParser()
 config.read('store_temperature.config')
 
 credentials = pika.PlainCredentials('rabbitmq', 'rabbitmq')
-parameters = pika.URLParameters('amqp://rabbitmq:rabbitmq@192.168.122.1:5672')
+parameters = pika.URLParameters('amqp://rabbitmq:rabbitmq@172.16.1.10:5672')
 
 connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
@@ -31,9 +31,7 @@ def print_message(ch, method, properties, body):
     else:
         cursor = db_connection.cursor()
         for one_entry in entries:
-            today = datetime.date.today()
-            time = datetime.datetime.strptime(one_entry['status_time'], "%I:%M:%S%p").time()
-            one_entry['formatted_time'] = datetime.datetime.combine(today, time)
+            one_entry['formatted_time'] = datetime.datetime.strptime(one_entry['status_time'], "%Y-%m-%d %I:%M:%S%p")
 
             query = "INSERT INTO temperature.temperatures(sensor_name, sensor_value, reading_time) VALUES (%(sensor_name)s, %(raw_value)s, %(formatted_time)s)"
             cursor.execute(query, one_entry)
