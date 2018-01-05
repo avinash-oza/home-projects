@@ -4,12 +4,15 @@ import json
 import mysql.connector
 import configparser
 import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 config = configparser.ConfigParser()
 config.read('store_temperature.config')
 
 credentials = pika.PlainCredentials('rabbitmq', 'rabbitmq')
-parameters = pika.URLParameters('amqp://rabbitmq:rabbitmq@192.168.122.1:5672')
+parameters = pika.URLParameters('amqp://rabbitmq:rabbitmq@172.16.1.10:5672')
 
 connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
@@ -21,24 +24,23 @@ db_user_name = config.get('DATABASE', 'user')
 db_password = config.get('DATABASE', 'password')
 db_name = config.get('DATABASE', 'database')
 db_connection = mysql.connector.connect(user=db_user_name,password=db_password,host=db_host, database=db_name)
-db_connection.autocommit = True
 
 def print_message(ch, method, properties, body):
     try:
-        entries = json.loads(body)
+        entries = json.loads(body.decode())
     except:
-        print("Exception while parsing queue data:", body)
+        logger.exception("Exception while parsing queue data:", body)
     else:
         cursor = db_connection.cursor()
+        logger.info(entries)
         for one_entry in entries:
-            today = datetime.date.today()
-            time = datetime.datetime.strptime(one_entry['status_time'], "%I:%M:%S%p").time()
-            one_entry['formatted_time'] = datetime.datetime.combine(today, time)
+            one_entry['formatted_time'] = datetime.datetime.strptime(one_entry['status_time'], "%Y-%m-%d %I:%M:%S%p")
 
             query = "INSERT INTO temperature.temperatures(sensor_name, sensor_value, reading_time) VALUES (%(sensor_name)s, %(raw_value)s, %(formatted_time)s)"
             cursor.execute(query, one_entry)
+            db_connection.commit()
+            logger.info("Inserted entry")
 
-        print("Inserted entry")
 
 channel.basic_consume(print_message, queue='temperatures_mysql', no_ack=True)
 
