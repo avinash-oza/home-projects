@@ -30,6 +30,6 @@ data = requests.get(url).json()
 
 data_dict = dict(sensor_name="OUTDOOR",
                  raw_value=data['currently']['temperature'],
-                 status_time=datetime.datetime.now().strftime('%Y-%m-%d %I:%M:%S% p'),
+                 status_time=datetime.datetime.now().strftime('%Y-%m-%d %I:%M:%S %p'),
                  current_temperature=True)
 channel.basic_publish(exchange='temperatures', routing_key='', body=json.dumps([data_dict]))
