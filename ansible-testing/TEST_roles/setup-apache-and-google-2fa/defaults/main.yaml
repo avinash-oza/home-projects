@@ -1,1 +1,2 @@
 google_2fa_package_url: https://storage.googleapis.com/google-code-archive-source/v2/code.google.com/google-authenticator-apache-module/source-archive.zip
+docker_server_ip: "{{ vault_docker_server_ip }}"
