@@ -1,0 +1,17 @@
+[Unit]
+Description=Store temperature rabbitmq service
+
+[Service]
+Type=simple
+User= {{ garage_door_user }}
+Group= {{ garage_door_user }}
+
+Environment="TZ=America/New_York"
+WorkingDirectory=/home/{{garage_door_user }}/home-projects/pi/store_temperature
+ExecStart=/home/{{ garage_door_user }}/store-temperature-virtual-env/bin/python store_temperatures.py
+
+Restart=on-success
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

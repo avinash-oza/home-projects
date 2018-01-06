@@ -1,0 +1,12 @@
+mysql_temperature_password: "{{ vault_mysql_temperature_password }}"
+# time in minutes to job mapping
+
+store_cron_job: 'cd /home/{{ garage_door_user }}/home-projects/pi/store_temperature && /home/{{ garage_door_user }}/store-temperature-virtual-env/bin/python store_temperatures.py'
+
+queue_cron_job: '/home/{{ garage_door_user }}/store-temperature-virtual-env/bin/python /home/{{ garage_door_user }}/home-projects/pi/store_temperature/queue_temperatures.py'
+
+# darksky related
+outdoor_cron_job: 'cd /home/{{ garage_door_user }}/home-projects/pi/store_temperature && /home/{{ garage_door_user }}/store-temperature-virtual-env/bin/python get_current_outdoor_temperature.py'
+
+darksky_api_key: "{{ vault_darksky_api_key }}"
+darksky_api_coordinates: "{{ vault_darksky_api_coordinates }}"

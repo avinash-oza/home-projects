@@ -1,0 +1,74 @@
+---
+- name: install prereq packages
+  become: true
+  apt: pkg={{item}}  state=installed update_cache=true
+  with_items:
+    - python-pip
+    - python-virtualenv
+    - python-dev
+
+- name: Check that home-projects exists for user
+  stat:
+    path: "/home/{{ garage_door_user }}/home-projects"
+  register: home_projects_dir
+
+- fail:
+    msg: "home-projects needs to exist for user before running this role"
+  when: home_projects_dir.stat.exists == False
+
+- name: Create virtual env for temperatures
+  pip:
+    requirements: "/home/{{ garage_door_user }}/home-projects/pi/store_temperature/requirements.txt"
+    virtualenv_python: python3
+    virtualenv: "/home/{{ garage_door_user }}/store-temperature-virtual-env"
+
+- name: Copy config for db
+  template:
+    backup: true
+    src: "store_temperature.config.j2"
+    dest: "/home/{{ garage_door_user }}/home-projects/pi/store_temperature/store_temperature.config"
+    owner: "{{ garage_door_user }}"
+    group: "{{ garage_door_user }}"
+    mode: 0755
+
+- name: Install queue cron job
+  cron:
+    name: "store_temperature_queue_job"
+    backup: true
+    minute: "*/10"
+    job: "{{ queue_cron_job }}"
+    state: present
+    user: "{{ garage_door_user }}"
+
+- name: Install outdoor temperature job
+  cron:
+    name: "store_temperature_outdoor_job"
+    backup: true
+    minute: "*/10"
+    job: "{{ outdoor_cron_job }}"
+    state: present
+    user: "{{ garage_door_user }}"
+
+
+- name: Copy systemd file for starting store_temperature service
+  become: yes
+  template:
+    src: "template_store_temperatures.service"
+    dest: "/etc/systemd/system/store_temperatures.service"
+    mode: 0644
+
+- name: Enable service to run on boot and start
+  become: yes
+  service:
+    name: "store_temperatures.service"
+    state: restarted
+    enabled: true
+
+- name: Change ownership of all files to user
+  become: true
+  file:
+    path: "/home/{{ garage_door_user }}"
+    owner: "{{ garage_door_user }}"
+    group: "{{ garage_door_user }}"
+    state: directory
+    recurse: yes
