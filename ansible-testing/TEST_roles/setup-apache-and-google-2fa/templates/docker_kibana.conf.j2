@@ -1,0 +1,50 @@
+ProxyPass /app/kibana http://{{ docker_server_ip}}:5601/app/kibana
+ProxyPassReverse /app/kibana http://{{ docker_server_ip}}:5601/app/kibana
+
+ProxyPass /app/timelion http://{{ docker_server_ip }}:5601/app/timelion
+ProxyPassReverse /app/timelion http://{{ docker_server_ip}}:5601/app/timelion
+
+ProxyPass /bundles http://{{ docker_server_ip}}:5601/bundles
+ProxyPassReverse /bundles http://{{ docker_server_ip}}:5601/bundles
+
+ProxyPass /elasticsearch http://{{ docker_server_ip}}:5601/elasticsearch
+ProxyPassReverse /elasticsearch http://{{ docker_server_ip}}:5601/elasticsearch
+
+ProxyPass /status http://{{ docker_server_ip}}:5601/status
+ProxyPassReverse /status http://{{ docker_server_ip}}:5601/status
+
+ProxyPass /api/status http://{{ docker_server_ip}}:5601/api/status
+ProxyPassReverse /api/status http://{{ docker_server_ip}}:5601/api/status
+
+ProxyPass /api/console http://{{ docker_server_ip}}:5601/api/console
+ProxyPassReverse /api/console http://{{ docker_server_ip}}:5601/api/console
+
+ProxyPass /api/timelion/run http://{{ docker_server_ip}}:5601/api/timelion/run
+ProxyPassReverse /api/timelion/run http://{{ docker_server_ip}}:5601/api/timelion/run
+
+ProxyPass /api/timelion/functions http://{{ docker_server_ip}}:5601/api/timelion/functions
+ProxyPassReverse /api/timelion/functions http://{{ docker_server_ip}}:5601/api/timelion/functions
+
+ProxyPass /api/ http://{{ docker_server_ip}}:5601/api/
+ProxyPassReverse /api/ http://{{ docker_server_ip}}:5601/api/
+
+ProxyPass /goto/ http://{{ docker_server_ip}}:5601/goto/
+ProxyPassReverse /goto/ http://{{ docker_server_ip}}:5601/goto/
+
+ProxyPass /shorten http://{{ docker_server_ip}}:5601/shorten
+ProxyPassReverse /shorten http://{{ docker_server_ip}}:5601/shorten
+
+ProxyPass /plugins/kibana/ http://{{ docker_server_ip}}:5601/plugins/kibana/
+ProxyPassReverse /plugins/kibana/ http://{{ docker_server_ip}}:5601/plugins/kibana/
+
+ProxyPass /plugins/timelion/ http://{{ docker_server_ip}}:5601/plugins/timelion/
+ProxyPassReverse /plugins/timelion/ http://{{ docker_server_ip}}:5601/plugins/timelion/
+
+ProxyPass /app/sense http://{{ docker_server_ip}}:5601/app/sense
+ProxyPassReverse /app/sense http://{{ docker_server_ip}}:5601/app/sense
+
+ProxyPass /ui/fonts/open_sans/ http://{{ docker_server_ip}}:5601/ui/fonts/open_sans/
+ProxyPassReverse /ui/fonts/open_sans/ http://{{ docker_server_ip}}:5601/ui/fonts/open_sans/
+
+ProxyPass /es_admin/ http://{{ docker_server_ip}}:5601/es_admin/
+ProxyPassReverse /es_admin/ http://{{ docker_server_ip}}:5601/es_admin/

@@ -1,9 +1,10 @@
 ---
-- name: install apache2 and apache2-dev
+- name: install apache2 and other modules
   apt: pkg={{item}}  state=installed update_cache=true cache_valid_time=3600
   with_items:
     - apache2
     - apache2-dev
+    - libapache2-mod-scgi
 
 - name: Disable listening on port 80
   lineinfile:
@@ -23,6 +24,7 @@
     path: /etc/apache2/mods-enabled/mod_authn_google.so
   register: google2fa_module
 
+#TODO: Move this block to seperate file
 - name: Download google2fa package
   get_url:
     url: "{{ google_2fa_package_url }}"
@@ -59,6 +61,7 @@
     - ssl
     - proxy_http
 
+#TODO: Download and extract ruttorent with proper settings and mount
 - name: Copy default SSL site
   become: true
   template:
@@ -73,10 +76,15 @@
   template:
     backup: true
     src: "{{ item }}.conf.j2"
-    dest: "/etc/apache2/confs-available/{{ item }}.conf"
+    dest: "/etc/apache2/conf-available/{{ item }}.conf"
   with_items:
-    - phpmyadmin
-    - gogs
+    - docker_phpmyadmin
+    - docker_gogs
+    - docker_kibana
+    - rutorrent
+
+- debug: 
+    msg: "Do not forget to enable relevant apache configs with a2enconf"
 
 
 - name: Enable default SSL site

@@ -1,0 +1,23 @@
+# MOUNT FOR RUTORRENT
+SCGIMount /RPC2 {{ rtorrent_server_ip }}:5000
+
+Alias /rutorrent /var/www/rutorrent
+<Directory /var/www/rutorrent>
+#SSLRequireSSL
+	Options FollowSymLinks
+	DirectoryIndex index.html
+	Order allow,deny
+   	Allow from all
+	AuthName "rutorrent Login"
+	<IfModule mod_php5.c>
+		AddType application/x-httpd-php .php
+
+		php_flag magic_quotes_gpc Off
+		php_flag track_vars On
+		php_flag register_globals Off
+		php_admin_flag allow_url_fopen Off
+		php_value include_path .
+	</IfModule>
+
+</Directory>
+
