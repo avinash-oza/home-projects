@@ -48,7 +48,7 @@
   pip:
     name: "{{ item }}"
     virtualenv_python: python2.7
-    virtualenv: "/home/{{ garage_door_user }}/virtual-env"
+    virtualenv: "/home/{{ garage_door_user }}/{{ microservice_name }}/virtual-env"
   with_items:
     - bottle
     - Rpi.GPIO
@@ -56,33 +56,33 @@
 - name: Checkout microservices directory
   git:
     repo: https://github.com/avinash-oza/raspberry-pi-microservices.git
-    dest: /home/{{ garage_door_user }}/raspberry-pi-microservices
-    force: yes
+    dest: /home/{{ garage_door_user }}/{{ microservice_name }}/raspberry-pi-microservices
+    force: true
 
 - name: Check if extra dependencies are needed based on repo
   stat:
-    path: "/home/{{ garage_door_user }}/raspberry-pi-microservices/{{ microservice_name }}/requirements.txt"
+    path: "/home/{{ garage_door_user }}/{{ microservice_name }}/raspberry-pi-microservices/{{ microservice_name }}/requirements.txt"
   register: additional_requirements_file
 
 - name: Install extra requirements
   pip:
     requirements: "{{ additional_requirements_file.stat.path }}"
     virtualenv_python: python2.7
-    virtualenv: "/home/{{ garage_door_user }}/virtual-env"
+    virtualenv: "/home/{{ garage_door_user }}/{{ microservice_name }}/virtual-env"
   when: additional_requirements_file.stat.exists == True
 
 - name: Copy config and create config for {{ microservice_name }}
   template:
     backup: true
     src: "configs/{{ microservice_name }}.config"
-    dest: "/home/{{ garage_door_user }}/raspberry-pi-microservices/{{ microservice_name }}/{{ microservice_name }}.config"
+    dest: "/home/{{ garage_door_user }}/{{ microservice_name }}/raspberry-pi-microservices/{{ microservice_name }}/{{ microservice_name }}.config"
     owner: "{{ garage_door_user }}"
     group: "{{ garage_door_user }}"
     mode: 0755
 
 - name: Change ownership of all files to user
   file:
-    path: "/home/{{ garage_door_user }}"
+    path: "/home/{{ garage_door_user }}/{{ microservice_name }}"
     owner: "{{ garage_door_user }}"
     group: "{{ garage_door_user }}"
     state: directory
@@ -94,6 +94,10 @@
     src: "template_bottle.service"
     dest: "/etc/systemd/system/{{ microservice_name }}.service"
     mode: 0644
+
+- name: reload systemd configs
+  systemd:
+    daemon_reload: yes
 
 - name: Enable service to run on boot and start
   become: yes
