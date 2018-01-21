@@ -37,6 +37,12 @@
     owner: "nagios"
     group: "nagios"
 
+
+# TODO: ################## checkout check_sip, update perl version to lib, install libswitch-perl
+
+
+###################
+
 - name: copy over nagios commands.cfg
   template:
     backup: true
