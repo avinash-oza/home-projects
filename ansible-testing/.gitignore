@@ -2,3 +2,4 @@
 credentials
 *.swp
 group_vars/all
+*.retry
