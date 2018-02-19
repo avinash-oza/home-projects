@@ -1,0 +1,20 @@
+
+- name: Install apcupsd
+  apt:
+    pkg: apcupsd
+    state: installed
+
+- name: Copy over configuration files
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/apcupsd/{{ item }}"
+  with_items:
+    - apcupsd.conf
+    - offbattery
+    - onbattery
+
+- name: Get check_apcupsd plugin
+  get_url:
+    url: http://lancet.mit.edu/mwall/projects/nagios/check_apcupsd
+    dest: /usr/lib/nagios/plugins/check_apcupsd
+    mode: 0755

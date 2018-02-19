@@ -4,6 +4,7 @@
   become: true
   roles:
     - { role: common, tags: ['base'] }
+    - { role: setup-apcupsd, tags: ['apcupsd']}
     - { role: install-telegram-bot, tags: ['telegram'] }
     - { role: install-raspberry-pi-microservice, microservice_name: nagios_alerts, microservice_port: 25001, tags: ['services']}
     - { role: install-raspberry-pi-microservice, microservice_name: nagios_passive_check, microservice_port: 25003, garage_door_user: nagios, tags: ['services']}
