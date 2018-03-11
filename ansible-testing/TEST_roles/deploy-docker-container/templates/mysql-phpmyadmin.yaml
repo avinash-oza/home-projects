@@ -13,6 +13,7 @@ services:
             - "8080:80"
         networks:
             - mysql_network
+        restart: always
     db:
         image: mysql
         environment:
@@ -23,6 +24,7 @@ services:
             - "{{ docker_volumes_path }}/mysql_server_data:/var/lib/mysql"
         networks:
             - mysql_network
+        restart: always
 
 volumes:
     db:

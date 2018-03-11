@@ -11,6 +11,7 @@ services:
 
         networks:
             - mysqlphpmyadmin_mysql_network
+        restart: always
 
 networks:
     mysqlphpmyadmin_mysql_network:

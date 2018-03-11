@@ -9,3 +9,4 @@ rabbit1:
         - "5672:5672"
     volumes:
         - "{{ docker_volumes_path }}/rabbitmq:/var/lib/rabbitmq"
+    restart: always
