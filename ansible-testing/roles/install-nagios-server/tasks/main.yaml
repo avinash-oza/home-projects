@@ -44,12 +44,14 @@
 ###################
 
 - name: copy over nagios commands.cfg
+  tags: config
   template:
     backup: true
     src: "commands.cfg"
     dest: "/etc/nagios3/commands.cfg"
 
 - name: copy over nagios configs
+  tags: config
   template:
     backup: true
     src: "{{ item }}"
