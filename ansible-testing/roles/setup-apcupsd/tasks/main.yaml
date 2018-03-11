@@ -5,6 +5,7 @@
     state: installed
 
 - name: Copy over configuration files
+  tags: config
   template:
     src: "{{ item }}.j2"
     dest: "/etc/apcupsd/{{ item }}"
@@ -12,6 +13,8 @@
     - apcupsd.conf
     - offbattery
     - onbattery
+    - doshutdown
+
 
 - name: Get check_apcupsd plugin
   get_url:
