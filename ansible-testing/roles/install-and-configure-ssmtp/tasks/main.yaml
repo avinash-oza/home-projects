@@ -1,0 +1,25 @@
+---
+
+- name: Install ssmtp
+  become: yes
+  apt:
+      name: ssmtp
+      state: present
+
+- name: Copy ssmtp config files
+  become: yes
+  template:
+      src: "{{ item }}.j2"
+      dest: "/etc/ssmtp/{{ item }}"
+      owner: root
+      group: root
+  with_items:
+      - revaliases
+      - ssmtp.conf
+
+- name: Add cron weekly email
+  cron:
+      name: "Weekly email"
+      job: 'echo $(uptime) | mail -s "$(date)" {{ vault_email_address }}'
+      special_time: weekly
+      state: present

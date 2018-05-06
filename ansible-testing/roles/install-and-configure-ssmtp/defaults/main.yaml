@@ -1,0 +1,3 @@
+---
+ssmtp_from_email_address: "{{ vault_ssmtp_from_email_address }}"
+ssmtp_from_email_password: "{{ vault_ssmtp_from_email_password }}"
