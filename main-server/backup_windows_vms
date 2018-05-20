@@ -2,7 +2,7 @@
 
 DATE=`date +%Y-%m-%d-%H-%M-%S`
 # Redirect output to file
-exec 3>&1 1>> /mnt/raid0/logs/linux_vms_backup/logfile-${DATE}.txt 2>&1
+exec 3>&1 1>> /mnt/raid0/logs/windows_vms_backup/logfile-${DATE}.txt 2>&1
 
 set -o xtrace
 # SET TEMP DIR
