@@ -15,7 +15,7 @@ services:
             - mysql_network
         restart: always
     db:
-        image: mysql
+        image: "mysql:5.7"
         environment:
             MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
         ports:
