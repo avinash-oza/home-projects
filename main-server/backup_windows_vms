@@ -18,7 +18,8 @@ for one_item in "${!array[@]}"
 do
     MACHINE_NAME=${array[one_item]}
     IMAGE_FILE=${image_file_names[$one_item]}
-    SRC_FILE=/mnt/vm_drive_ssd/vm_drives/$IMAGE_FILE
+#   SRC_FILE=/mnt/vm_drive_ssd/vm_drives/$IMAGE_FILE
+    SRC_FILE=/mnt/raid0/vm_drives/$IMAGE_FILE
     DEST_FILE=/mnt/vm_drive_raid1/ssd_vm_drives/$IMAGE_FILE
 
     echo "Shutting down $MACHINE_NAME" && \

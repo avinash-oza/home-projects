@@ -9,8 +9,8 @@ set -o xtrace
 export -p TMPDIR=/mnt/raid0/tmp_dir
 
 # Declare vm names and image names for backup
-array=("torrent-box" "mysql-server" "dev-machine")
-image_file_names=("seedbox.qcow2" "mysql-server.qcow2" "dev-machine.qcow2")
+array=("linux-desktop" "freepbx" "torrent-box" "mysql-server" "dev-machine")
+image_file_names=("linux-desktop.qcow2" "freepbx-cd.qcow2" "seedbox.qcow2" "mysql-server.qcow2" "dev-machine.qcow2")
 
 for one_item in "${!array[@]}"
 do
