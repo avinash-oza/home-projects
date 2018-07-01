@@ -1,3 +1,41 @@
+
+- name: Add docker gpg keys
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: Install prerequiste packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg2
+    - software-properties-common
+
+- name: Add docker apt repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/debian stretch stable"
+    state: present
+    filename: docker
+
+- name: Install docker packages
+  apt:
+    name: docker-ce
+    state: present
+    update_cache: yes
+
+- name: Install docker-py and docker-compose
+  pip:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - docker-compose
+#   - docker-py
+
 - name: "Copy over {{ docker_compose_file }}"
   template:
     src: "{{ docker_compose_file }}"
