@@ -1,0 +1,24 @@
+---
+- name: Install rsnapshot
+  apt:
+      name: rsnapshot
+      state: present
+
+- name: Copy config file
+  template:
+    backup: yes
+    src: rsnapshot.conf.j2
+    dest: /etc/rsnapshot.conf
+    owner: root
+    group: root
+
+- name: Copy cron config file
+  template:
+    backup: yes
+    src: rsnapshot.j2
+    dest: /etc/cron.d/rsnapshot
+    owner: root
+    group: root
+
+
+
