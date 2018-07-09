@@ -1,0 +1,24 @@
+---
+- name: Install samba
+  apt:
+      name: samba
+      state: present
+
+- name: Copy smbd.conf
+  template:
+    backup: yes
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+
+- name: Add users for samba access
+  become: yes
+  command: "smbpasswd -a -s {{ item.key }}"
+  args:
+    stdin: "{{ item.value}}\n{{ item.value }}"
+  with_dict: "{{ vault_samba_passwords }}"
+
+
+
+

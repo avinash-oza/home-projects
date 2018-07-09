@@ -5,6 +5,7 @@
   become: true
   roles:
       - { role: install-rsnapshot, become: yes }
+      - { role: install-samba, become: yes }
       - { role: install-and-configure-vim-for-user, user_to_configure: deploy }
     - common
     - setup-nagios-monitoring
