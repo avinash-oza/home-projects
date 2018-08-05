@@ -5,7 +5,7 @@
     state: present
   with_items:
     - nfs-utils
-  when: ansible_distribution != "Debian" # freepbx is centos
+  when: ansible_distribution == "CentOS" # freepbx is centos
 
 - name: Install required packages Debian
   apt:
@@ -13,7 +13,7 @@
     state: present
   with_items:
     - nfs-common
-  when: ansible_distribution == "Debian" # freepbx is centos
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"  # freepbx is centos
 
 - name: "Make mount point /mnt/raid0"
   become: true

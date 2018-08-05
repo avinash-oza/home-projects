@@ -5,7 +5,7 @@
   with_items:
     - git
     - stow
-  when: ansible_distribution == "Debian" # freepbx is centos
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu" # freepbx is centos
 
 # Configure vim with plugins and dotfiles
 - name: checkout dotfiles
