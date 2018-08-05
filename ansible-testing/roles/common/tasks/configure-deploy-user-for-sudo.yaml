@@ -35,9 +35,7 @@
   authorized_key:
     user: "{{ sudo_user_to_configure }}"
     state: present
-#   key: "{{ lookup('file', 'id_rsa.pub') }}"
     key: "{{ item }}"
   with_file:
     - id_rsa.pub
-    - id_rsa_dev.pub
-
+    - ansible_tower.pub
