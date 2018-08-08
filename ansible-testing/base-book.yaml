@@ -1,7 +1,0 @@
----
-- hosts: all
-  remote_user: deploy
-  become: true
-  roles:
-    - common
-

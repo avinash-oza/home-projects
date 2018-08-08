@@ -1,6 +1,0 @@
-airvpn_api_key: "{{ vault_airvpn_api_key }}"
-
-nagios_contact_name: "{{ vault_nagios_contact_name }}"
-nagios_contact_alias: "{{ vault_nagios_contact_alias }}"
-nagios_contact_email: "{{ vault_nagios_contact_email }}"
-nagios_sms_email: "{{ vault_nagios_sms_email }}"
