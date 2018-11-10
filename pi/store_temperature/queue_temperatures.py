@@ -1,20 +1,17 @@
-import pika
+import boto3
 import requests
+
 
 urls_to_get = ['http://172.16.2.100:25002/temperature/all', 'http://172.16.2.102:25002/temperature/all']
 
-credentials = pika.PlainCredentials('rabbitmq', 'rabbitmq')
-parameters = pika.URLParameters('amqp://rabbitmq:rabbitmq@172.16.1.10:5672')
+sqs = boto3.resource('sqs')
 
-connection = pika.BlockingConnection(parameters)
-channel = connection.channel()
-
-channel.exchange_declare(exchange='temperatures', exchange_type='fanout')
-channel.queue_declare(queue='temperatures_mysql')
-channel.queue_declare(queue='temperatures_elasticsearch')
-channel.queue_bind(exchange='temperatures', queue='temperatures_mysql')
-channel.queue_bind(exchange='temperatures', queue='temperatures_elasticsearch')
+queue = sqs.get_queue_by_name(QueueName='temperatures')
 
 for url in urls_to_get:
-    body = requests.get(url) #TODO: Test
-    channel.basic_publish(exchange='temperatures', routing_key='', body=body.text)
+    try:
+        body = requests.get(url, timeout=2)
+    except Exception as e:
+        print("Exception when trying to pull url {}".format(url))
+    else:
+        queue.send_message(MessageBody=body.text)
