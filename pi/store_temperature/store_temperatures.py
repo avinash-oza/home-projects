@@ -1,4 +1,4 @@
-import pika
+import boto3
 import requests
 import json
 import mysql.connector
@@ -11,23 +11,20 @@ logger = logging.getLogger(__name__)
 config = configparser.ConfigParser()
 config.read('store_temperature.config')
 
-credentials = pika.PlainCredentials('rabbitmq', 'rabbitmq')
-parameters = pika.URLParameters('amqp://rabbitmq:rabbitmq@172.16.1.10:5672')
-
-connection = pika.BlockingConnection(parameters)
-channel = connection.channel()
-
-channel.queue_declare(queue='temperatures_mysql')
-
 db_host = config.get('DATABASE', 'host')
 db_user_name = config.get('DATABASE', 'user')
 db_password = config.get('DATABASE', 'password')
 db_name = config.get('DATABASE', 'database')
 db_connection = mysql.connector.connect(user=db_user_name,password=db_password,host=db_host, database=db_name)
 
-def print_message(ch, method, properties, body):
+sqs = boto3.resource('sqs')
+queue = sqs.get_queue_by_name(QueueName='temperatures')
+
+for message in queue.receive_messages(MaxNumberOfMessages=10,WaitTimeSeconds=20):
+# retrieve SQS messages
+
     try:
-        entries = json.loads(body.decode())
+        entries = json.loads(message.body)
     except:
         logger.exception("Exception while parsing queue data:", body)
     else:
@@ -40,8 +37,4 @@ def print_message(ch, method, properties, body):
             cursor.execute(query, one_entry)
             db_connection.commit()
             logger.info("Inserted entry")
-
-
-channel.basic_consume(print_message, queue='temperatures_mysql', no_ack=True)
-
-channel.start_consuming()
+        message.delete()
