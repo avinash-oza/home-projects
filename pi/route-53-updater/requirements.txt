@@ -1,4 +1,4 @@
-PyYAML==3.12
+PyYAML==3.13
 argparse==1.2.1
 awscli==1.11.36
 boto==2.45.0
