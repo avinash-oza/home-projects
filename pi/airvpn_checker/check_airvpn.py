@@ -1,38 +1,46 @@
-import urllib
-import urllib2
-import json
-import ConfigParser
-import sys
+import argparse
+import requests
+import warnings
 
-config = ConfigParser.ConfigParser()
-config.read('airvpn.config')
 
-API_KEY = config.get('AIRVPN', 'API_KEY')
-URL = 'http://localhost:25003/submit_check'
+def get_airvpn_status(vpn_api_token, expected_session_count):
+    url = 'https://airvpn.org/api/'
+    exit_code = 0
 
-exit_code = "0"
-output_text = ""
+    resp = requests.get(url, params={'service': 'userinfo',
+                                     'format': 'json',
+                                     'key': vpn_api_token})
+    try:
+        resp.raise_for_status()
+    except requests.HTTPError as e:
+        message_text = 'Exception when getting status: {}'.format(e)
+        exit_code = 2
+        return message_text, exit_code
 
-try:
-    result = json.load(urllib.urlopen("https://airvpn.org/api/?service=userinfo&format=json&key={0}".format(API_KEY)))
-except:
-    output_text= "Error while accessing API"
-    exit_code = "2"
-else:
-    num_sessions = 0
-    if 'sessions' in result:
-        num_sessions = len(result['sessions'])
+    data = resp.json()
+    message_text = 'Sessions currently connected: ' + ",".join([d['device_name'] for d in data['sessions']])
+    if len(data['sessions']) < expected_session_count:
+        exit_code = 2
+    return message_text, exit_code
 
-    if num_sessions < 2:
-        exit_code = "2"
-    vpn_ips = '|'.join(','.join([s['vpn_ip'], s['server_location'], s['connected_since_date']]) for s in result['sessions'])
-    output_text = "Number of sessions: {0} {1}...{2}".format(num_sessions, "less than 2" if num_sessions < 2 else "", vpn_ips)
+def submit_check(vpn_api_token, expected_session_count, passive_check_endpoint, token, hostname):
+    status_text, exit_code = get_airvpn_status(vpn_api_token, expected_session_count)
+    submit_cmd = "PROCESS_SERVICE_CHECK_RESULT;{};AirVPN Status;{};{}".format(hostname, exit_code, status_text)
 
-passive_check_result = [dict(hostname='monitoring-station',service_description='AirVPN Status', return_code=exit_code,plugin_output=output_text)]
+    with warnings.catch_warnings():
+        # ignore the SSL related warning as this is internal
+        warnings.simplefilter("ignore")
+        _ = requests.get(passive_check_endpoint, verify=False, params={'token': token,
+                                                                       'cmd': 'submitcmd',
+                                                                       'command': submit_cmd})
 
-# Create and post request
-req = urllib2.Request(URL)
-req.add_header('Content-Type', 'application/json')
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--vpn-api-token', type=str, help="VPN API token")
+    parser.add_argument('--expected-session-count', type=int, default=2, help="number of sessions to expect")
+    parser.add_argument('--submit-check-url', type=str, help="Nagios passive check url")
+    parser.add_argument('--token', type=str, help="Nagios passive check token")
+    parser.add_argument('--hostname', type=str, help="Nagios passive check url")
+    args = parser.parse_args()
 
-response = urllib2.urlopen(req, json.dumps(passive_check_result))
-
+    submit_check(args.vpn_api_token, args.expected_session_count, args.submit_check_url, args.token, args.hostname)
