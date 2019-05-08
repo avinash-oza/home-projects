@@ -1,24 +1,16 @@
+import arrow
 import boto3
 import requests
 import json
-import mysql.connector
-import configparser
 import datetime
 import logging
 
 logger = logging.getLogger(__name__)
 
-config = configparser.ConfigParser()
-config.read('store_temperature.config')
-
-db_host = config.get('DATABASE', 'host')
-db_user_name = config.get('DATABASE', 'user')
-db_password = config.get('DATABASE', 'password')
-db_name = config.get('DATABASE', 'database')
-db_connection = mysql.connector.connect(user=db_user_name,password=db_password,host=db_host, database=db_name)
-
 sqs = boto3.resource('sqs')
-queue = sqs.get_queue_by_name(QueueName='temperatures')
+ddb = boto3.client('dynamodb')
+
+queue = sqs.get_queue_by_name(QueueName='temperatures-test')
 
 # keep trying till the queue is empty
 while True:
@@ -36,14 +28,19 @@ while True:
             logger.exception("Exception while parsing queue data:", body)
         else:
             print("Got messages")
-            cursor = db_connection.cursor()
             logger.info(entries)
             for one_entry in entries:
-                one_entry['formatted_time'] = datetime.datetime.strptime(one_entry['status_time'], "%Y-%m-%d %I:%M:%S %p")
+                dt_obj = arrow.get(datetime.datetime.strptime(one_entry['status_time'], '%Y-%m-%d %I:%M:%S %p')).replace(tzinfo='America/New_York').to('utc')
+                dt_str = dt_obj.isoformat()
 
-                query = "INSERT INTO temperature.temperatures(sensor_name, sensor_value, reading_time) VALUES (%(sensor_name)s, %(raw_value)s, %(formatted_time)s)"
-                cursor.execute(query, one_entry)
-                db_connection.commit()
-                logger.info("Inserted entry")
+                key_name = 'temperature+{}+{}'.format(one_entry['sensor_name'].upper(), dt_obj.date().strftime('%Y%m%d'))
+                ddb.put_item(TableName='dataTable', Item={
+                    'key_name': {"S": key_name},
+                    'timestamp': {"S": dt_str },
+                    'reading_value': {"N" : str(one_entry['raw_value']) }
+                    }, ReturnConsumedCapacity='TOTAL')
+
+                print("Inserted entry")
+
             delete_message_ids.append({'Id': message.message_id, 'ReceiptHandle': message.receipt_handle})
     queue.delete_messages(Entries=delete_message_ids)
