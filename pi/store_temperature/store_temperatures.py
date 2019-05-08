@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 sqs = boto3.resource('sqs')
 ddb = boto3.client('dynamodb')
 
-queue = sqs.get_queue_by_name(QueueName='temperatures-test')
+queue = sqs.get_queue_by_name(QueueName='temperatures')
 
 # keep trying till the queue is empty
 while True:
