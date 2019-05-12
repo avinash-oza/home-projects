@@ -1,5 +1,6 @@
 import requests
 import datetime
+import arrow
 import json
 import boto3
 import os
@@ -23,7 +24,7 @@ def lambda_handler(event, context):
         # construct value for queue
         data_dict = dict(sensor_name="OUTDOOR",
                          raw_value=data['currently']['temperature'],
-                         status_time=datetime.datetime.now().strftime('%Y-%m-%d %I:%M:%S %p'),
+                         status_time=arrow.utcnow().to('America/New_York').strftime('%Y-%m-%d %I:%M:%S %p'),
                          current_temperature=True)
         queue.send_message(MessageBody=json.dumps([data_dict]))
         print("Sent message to queue")
