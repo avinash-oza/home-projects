@@ -1,5 +1,6 @@
 import json
 import boto3
+import datetime
 
 ddb = boto3.client('dynamodb')
 
@@ -7,6 +8,8 @@ ddb = boto3.client('dynamodb')
 def lambda_handler(event, context):
     location = event['pathParameters']['location'].upper()
     dt_str = event['pathParameters']['date_str']
+    if dt_str.lower() == 'today':
+        dt_str = datetime.datetime.utcnow().strftime('%Y%m%d')
 
     extra_args = {}
 
