@@ -4,13 +4,23 @@ import arrow
 import boto3
 
 ddb = boto3.client('dynamodb')
+sqs = boto3.resource('sqs')
+queue = sqs.get_queue_by_name(QueueName='temperatures')
 
 
 def lambda_handler(event, context):
-    for one_record in event['Records']:
+    messages = queue.receive_messages(MaxNumberOfMessages=10, WaitTimeSeconds=2)
+    if not messages:
+        print("No messages, nothing to do")
+        return
+
+    delete_message_ids = []
+
+    for one_record in messages:
         try:
-            entries = json.loads(one_record['body'])
-        except:
+            entries = json.loads(one_record.body)
+        except Exception as e:
+            print(e)
             print("Exception when parsing message", one_record)
         else:
             print("Got messages")
@@ -24,31 +34,8 @@ def lambda_handler(event, context):
                     'timestamp': {"S": dt_str },
                     'reading_value': {"N" : str(one_entry['raw_value']) }
                     }, ReturnConsumedCapacity='TOTAL')
+            delete_message_ids.append({'Id': one_record.message_id, 'ReceiptHandle': one_record.receipt_handle})
+    queue.delete_messages(Entries=delete_message_ids)
 
-
-test_events= {'Records': [{'messageId': '19dd0b57-b21e-4ac1-bd88-01bbb068cb78',
-       'receiptHandle': 'MessageReceiptHandle',
-          'body': '[{"raw_value": 67.325, "sensor_name": "GARAGE", "hostname": "pi2", "return_code": "0", "plugin_output": "Garage Temperature: 67.325F", "service_description": "Garage Temperature", "status_time": "2019-05-09 09:20:05 PM"}]',
-             'attributes': {'ApproximateReceiveCount': '1',
-                     'SentTimestamp': '1523232000000',
-                         'SenderId': '123456789012',
-                             'ApproximateFirstReceiveTimestamp': '1523232000001'},
-                'messageAttributes': {},
-                   'md5OfBody': '7b270e59b47ff90a553787216d55d91d',
-                      'eventSource': 'aws:sqs',
-                         'eventSourceARN': 'arn:aws:sqs:us-east-1:123456789012:MyQueue',
-                            'awsRegion': 'us-east-1'},
-                              {'messageId': '19dd0b57-b21e-4ac1-bd88-01bbb068cb78',
-                                     'receiptHandle': 'MessageReceiptHandle',
-                                     'body': '[{"raw_value": 67.325, "sensor_name": "GARAGE", "hostname": "pi2", "return_code": "0", "plugin_output": "Garage Temperature: 67.325F", "service_description": "Garage Temperature", "status_time": "2019-05-09 09:20:05 PM"}]',
-                                           'attributes': {'ApproximateReceiveCount': '1',
-                                                   'SentTimestamp': '1523232000000',
-                                                       'SenderId': '123456789012',
-                                                           'ApproximateFirstReceiveTimestamp': '1523232000001'},
-                                              'messageAttributes': {},
-                                                 'md5OfBody': '7b270e59b47ff90a553787216d55d91d',
-                                                    'eventSource': 'aws:sqs',
-                                                       'eventSourceARN': 'arn:aws:sqs:us-east-1:123456789012:MyQueue',
-                                                          'awsRegion': 'us-east-1'}]}
 
 #ambda_handler(test_events, None)
