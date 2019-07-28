@@ -25,7 +25,12 @@ def lambda_handler(event, context):
         else:
             print("Got messages")
             for one_entry in entries:
-                dt_obj = arrow.get(datetime.datetime.strptime(one_entry['status_time'], '%Y-%m-%d %I:%M:%S %p')).replace(tzinfo='America/New_York').to('utc')
+                try:
+                    dt_obj = arrow.get(one_entry['status_time_utc'])
+                    print("Got utc timestamp")
+                except KeyError:
+                    dt_obj = arrow.get(datetime.datetime.strptime(one_entry['status_time'], '%Y-%m-%d %I:%M:%S %p')).replace(tzinfo='America/New_York').to('utc')
+
                 dt_str = dt_obj.isoformat()
 
                 key_name = 'temperature+{}+{}'.format(one_entry['sensor_name'].upper(), dt_obj.date().strftime('%Y%m%d'))
