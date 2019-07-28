@@ -22,9 +22,11 @@ def lambda_handler(event, context):
         print("Exception occured getting data from dark sky")
     else:
         # construct value for queue
+        ts = arrow.utcnow()
         data_dict = dict(sensor_name="OUTDOOR",
                          raw_value=data['currently']['temperature'],
-                         status_time=arrow.utcnow().to('America/New_York').strftime('%Y-%m-%d %I:%M:%S %p'),
+                         status_time=ts.to('America/New_York').strftime('%Y-%m-%d %I:%M:%S %p'),
+                         status_time_utc=ts.isoformat(),
                          current_temperature=True)
         queue.send_message(MessageBody=json.dumps([data_dict]))
         print("Sent message to queue")
