@@ -23,7 +23,9 @@ def lambda_handler(event, context):
                         ScanIndexForward=False, **extra_args)
     result_list = []
     for r in one_res['Items']:
-        result_list.append((r['timestamp']['S'], r['reading_value']['N']))
+        result_list.append({'timestamp': r['timestamp']['S'],
+                            'value': r['reading_value']['N']
+                            })
 
     return {
         'statusCode': 200,
