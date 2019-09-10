@@ -1,2 +1,0 @@
-nrpe -c /usr/local/nagios/etc/nrpe.cfg -d
-/etc/init.d/nagios start
