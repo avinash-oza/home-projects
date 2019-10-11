@@ -3,7 +3,7 @@ import boto3
 import json
 import uuid
 import os
-import requests
+from botocore.vendored import requests
 import warnings
 
 sqs = boto3.resource('sqs')
@@ -38,9 +38,11 @@ def get_airvpn_status(vpn_api_token, expected_session_count):
 
 def lambda_handler(event, context):
     vpn_api_token = os.environ['AIRVPN_TOKEN']
-    expected_session_count = os.environ['EXPECTED_SESSION_COUNT']
+    expected_session_count = int(os.environ['EXPECTED_SESSION_COUNT'])
     status_text, exit_code = get_airvpn_status(vpn_api_token, expected_session_count)
-    q.send_message(MessageBody=json.dumps({'message_text': status_text}), MessageGroupId='nagios-alerts', MessageDeduplicationId=str(uuid.uuid4()))
+    if exit_code:
+        print("sending message")
+        q.send_message(MessageBody=json.dumps({'message_text': status_text}), MessageGroupId='nagios-alerts', MessageDeduplicationId=str(uuid.uuid4()))
     print(status_text, exit_code)
 
 if __name__ == '__main__':
