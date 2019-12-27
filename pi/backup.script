@@ -1,3 +1,0 @@
-#Make sure to mount as nfs /mnt/raid1
-tar cpzf /mnt/raid0/backups/rasberry_pi_sdcard/pi-backup-$(date +%m-%d-%y--%I-%M-%p).tar.gz \
---exclude=/proc --exclude=/lost+found --exclude=/dev --exclude=/media --exclude=/mnt --exclude=/sys --exclude=/tmp / 
