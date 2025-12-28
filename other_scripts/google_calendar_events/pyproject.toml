@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "awscli>=1.44.7",
     "gcsa>=2.6.0",
     "pandas>=2.3.3",
     "requests>=2.32.5",
