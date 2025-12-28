@@ -18,10 +18,10 @@ def read_events_file(file_path):
     events_df = pd.read_csv(file_path)
     events_df["event_date_start"] = pd.to_datetime(
         events_df["event_date_start"]
-    ).dt.tz_localize("America/New_York")
+    ).dt.tz_localize(None)
     events_df["event_date_end"] = pd.to_datetime(
         events_df["event_date_end"]
-    ).dt.tz_localize("America/New_York")
+    ).dt.tz_localize(None)
 
     logger.info(f"Read {len(events_df)} events from file_path={file_path}")
 
@@ -29,18 +29,43 @@ def read_events_file(file_path):
 
 
 def add_events(events_df, calendar, dry_run):
+    s = events_df["event_date_start"].min()
+    e = events_df["event_date_start"].max() + timedelta(hours=1)
+
+    existing_events = set()
+
+    for e in calendar.get_events(time_min=s, time_max=e):
+        event_key = (
+            e.summary,
+            e.start.replace(tzinfo=None),
+            e.end.replace(tzinfo=None),
+        )
+        existing_events.add(event_key)
+
     for idx, row in events_df.iterrows():
         event_name = row["event_name"]
-        start_dt = row["event_date_start"]
-        end_dt = row["event_date_end"]
+        event_start_time = row["event_date_start"].to_pydatetime()
+        event_end_time = row["event_date_end"].to_pydatetime()
         location = row["location"]
 
+        event_key = (event_name, event_start_time, event_end_time)
+        if event_key in existing_events:
+            logger.info(
+                f"Skipping event_name={event_name} with start={event_start_time},end={event_end_time},location={location} as it exists"
+            )
+            continue
+
         logger.info(
-            f"Adding event_name={event_name} with start={start_dt},end={end_dt},location={location}"
+            f"Adding event_name={event_name} with start={event_start_time},end={event_end_time},location={location}"
         )
 
         if not dry_run:
-            e = Event(event_name, start=start_dt, end=end_dt, location=location)
+            e = Event(
+                event_name,
+                start=event_start_time,
+                end=event_end_time,
+                location=location,
+            )
             calendar.add_event(e)
 
 
@@ -85,6 +110,13 @@ def main():
         for e in cal.get_events(time_min=s, time_max=e):
             logger.info(f"Deleting event={e.summary}")
             cal.delete_event(e)
+
+    future_events_df = df_events[
+        df_events["event_date_start"] >= pd.Timestamp.now(tz=None)
+    ]
+    if future_events_df.empty:
+        logger.warning(f"No events in the future to add")
+        return
 
     add_events(df_events, cal, dry_run)
 
