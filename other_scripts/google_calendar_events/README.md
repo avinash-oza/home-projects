@@ -1,0 +1,1 @@
+Sample call to run: `--events-file-path sample_input.csv --calendar-id XYZCAL@group.calendar.google.com`

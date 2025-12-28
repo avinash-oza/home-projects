@@ -73,11 +73,6 @@ def main():
     parser = argparse.ArgumentParser(description="Adds events from a file to calendar")
     parser.add_argument("--calendar-id", type=str, help="Google calendar id")
     parser.add_argument(
-        "--wipe-calendar",
-        action="store_true",
-        help="Wipe the calendar before adding events",
-    )
-    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Print out what is being done but don't do it",
@@ -91,7 +86,6 @@ def main():
 
     args = parser.parse_args()
     calendar_id = args.calendar_id
-    wipe_calendar = args.wipe_calendar
     dry_run = args.dry_run
     events_file_path = args.events_file_path
 
@@ -103,13 +97,14 @@ def main():
 
     df_events = read_events_file(events_file_path)
 
-    if not dry_run and wipe_calendar:
-        logger.info(f"Wiping calendar before adding new events to it")
-        s = df_events["event_date_start"].min()
-        e = df_events["event_date_start"].max() + timedelta(hours=1)
-        for e in cal.get_events(time_min=s, time_max=e):
-            logger.info(f"Deleting event={e.summary}")
-            cal.delete_event(e)
+    # TODO: DELETE THIS CODE FOR DELETING
+    # if not dry_run:
+    #     logger.info(f"Wiping calendar before adding new events to it")
+    #     s = df_events["event_date_start"].min()
+    #     e = df_events["event_date_start"].max() + timedelta(hours=1)
+    #     for e in cal.get_events(time_min=s, time_max=e):
+    #         logger.info(f"Deleting event={e.summary}")
+    #         cal.delete_event(e)
 
     future_events_df = df_events[
         df_events["event_date_start"] >= pd.Timestamp.now(tz=None)
