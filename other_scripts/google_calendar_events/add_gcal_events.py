@@ -1,6 +1,6 @@
 import argparse
 import logging
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 import pandas as pd
 from gcsa.event import Event
@@ -37,8 +37,8 @@ def add_events(events_df, calendar, dry_run):
     for e in calendar.get_events(time_min=s, time_max=e):
         event_key = (
             e.summary,
-            e.start.replace(tzinfo=None),
-            e.end.replace(tzinfo=None),
+            e.start.replace(tzinfo=None) if isinstance(e.start, datetime) else e.start,
+            e.end.replace(tzinfo=None) if isinstance(e.end, datetime) else e.end,
         )
         existing_events.add(event_key)
 
@@ -48,6 +48,10 @@ def add_events(events_df, calendar, dry_run):
         event_end_time = row["event_date_end"].to_pydatetime()
         location = row["location"]
         is_all_day = row["all_day"]
+        if is_all_day:
+            event_start_time = event_start_time.date()
+            # Legacy existing events have the event ending one day later
+            event_end_time = event_end_time.date() + timedelta(days=1)
 
         event_key = (event_name, event_start_time, event_end_time)
         if event_key in existing_events:
@@ -59,9 +63,6 @@ def add_events(events_df, calendar, dry_run):
         logger.info(
             f"Adding event_name={event_name} with start={event_start_time},end={event_end_time},location={location}"
         )
-        if is_all_day:
-            event_start_time = event_start_time.date()
-            event_end_time = event_end_time.date()
 
         if not dry_run:
             e = Event(
@@ -69,6 +70,7 @@ def add_events(events_df, calendar, dry_run):
                 start=event_start_time,
                 end=event_end_time,
                 location=location,
+                default_reminders=True
             )
             calendar.add_event(e)
 
