@@ -47,6 +47,7 @@ def add_events(events_df, calendar, dry_run):
         event_start_time = row["event_date_start"].to_pydatetime()
         event_end_time = row["event_date_end"].to_pydatetime()
         location = row["location"]
+        is_all_day = row["all_day"]
 
         event_key = (event_name, event_start_time, event_end_time)
         if event_key in existing_events:
@@ -58,6 +59,9 @@ def add_events(events_df, calendar, dry_run):
         logger.info(
             f"Adding event_name={event_name} with start={event_start_time},end={event_end_time},location={location}"
         )
+        if is_all_day:
+            event_start_time = event_start_time.date()
+            event_end_time = event_end_time.date()
 
         if not dry_run:
             e = Event(
